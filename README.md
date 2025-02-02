@@ -2,6 +2,7 @@ Roadmap para la Digitalización de AUTRA
 
 (Basado en la solución WordPress + WPForms + PDF Interactivo)
 
+
 📌 Fase 1: Planificación y Preparación (1-2 semanas)
 
 🔹 Objetivo: Definir requisitos técnicos, seleccionar herramientas y preparar el entorno.
@@ -15,6 +16,7 @@ Roadmap para la Digitalización de AUTRA
 ✅ Paso 1.4: Configurar un entorno de pruebas en WordPress para hacer tests sin afectar la web en producción.
 
 ✅ Paso 1.5: Definir roles y permisos (terapeutas, pacientes) y los niveles de acceso a los formularios.
+
 
 📌 Fase 2: Implementación Técnica (2-3 semanas)
 
@@ -32,6 +34,7 @@ Roadmap para la Digitalización de AUTRA
 
 ✅ Paso 2.6: Ajustes según feedback recibido.
 
+
 📌 Fase 3: Seguridad y Control de Acceso (1-2 semanas)
 
 🔹 Objetivo: Garantizar que los documentos sean privados y solo accesibles en sesión.
@@ -45,6 +48,7 @@ Roadmap para la Digitalización de AUTRA
 ✅ Paso 3.4: Configurar alertas para el terapeuta en caso de acceso prolongado.
 
 ✅ Paso 3.5: Validación de seguridad con pruebas de acceso controlado.
+
 
 📌 Fase 4: Experiencia de Usuario y Organización (2 semanas)
 
@@ -60,13 +64,17 @@ Roadmap para la Digitalización de AUTRA
 
 ✅ Paso 4.5: Ajustar detalles de diseño y accesibilidad.
 
+
 📌 Fase 5: Lanzamiento y Optimización Continua (En curso)
 
 🔹 Objetivo: Desplegar el sistema en producción y mejorar según uso real.
 
 ✅ Paso 5.1: Migrar la solución a la web oficial de AUTRA o hacer una navegacion desde la web oficial de AUTRA al sistema.
+
 ✅ Paso 5.2: Capacitar a los terapeutas en el uso de la plataforma.
+
 ✅ Paso 5.3: Monitorizar el uso y resolver incidencias.
+
 ✅ Paso 5.4: Recopilar métricas de uso y ajustar funcionalidades según sea necesario.
 
 ⏳ Estimación de Tiempo Total: Aproximadamente 2-3 meses
