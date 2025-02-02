@@ -3,7 +3,9 @@ Roadmap para la Digitalización de AUTRA
 (Basado en la solución WordPress + WPForms + PDF Interactivo)
 
 Hecho:✅
+
 En proceso: 🚧
+
 Por hacer:❌
 
 📌 Fase 1: Planificación y Preparación (1-2 semanas)
