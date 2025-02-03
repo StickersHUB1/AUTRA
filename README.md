@@ -1,4 +1,4 @@
-🔹Roadmap para el Equipo de Desarrollo:
+🗺️Roadmap para el Equipo de Desarrollo:
 
 Por hacer:❌
 
