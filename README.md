@@ -6,7 +6,7 @@ En proceso:🚧
 
 Hecho:✅
 
-🔹❌ 1. Uso de Endpoints en Node.js 
+🔹 1. Uso de Endpoints en Node.js ❌
 
 Objetivo:
 
@@ -20,7 +20,7 @@ Implementación:
 
 ❌ Asegurar que la base de datos esté protegida y nunca sea expuesta directamente al cliente.
 
-🔹❌ 2. Sistema Totalmente Privado (con VPS)
+🔹 2. Sistema Totalmente Privado (con VPS) ❌
 
 Objetivo:
 
@@ -34,7 +34,7 @@ Implementación:
 
 ❌ Asegurar la comunicación entre los dispositivos mediante una red privada virtual o configuraciones de red adecuadas en el VPS.
 
-🔹❌ 3. Base de Datos Simplificada con Archivos JSON
+🔹 3. Base de Datos Simplificada con Archivos JSON ❌
 
 Objetivo:
 
@@ -73,7 +73,7 @@ Facilita la administración de datos en un entorno controlado.
 
 Permite cifrar los archivos para mayor seguridad.
 
-🔹❌ 4. Autenticación Básica con ID y Contraseña
+🔹 4. Autenticación Básica con ID y Contraseña ❌
 
 Objetivo:
 
@@ -95,7 +95,7 @@ const bcrypt = require('bcrypt');
 const hashedPassword = bcrypt.hashSync('mi_contraseña_secreta', 10);
 console.log(hashedPassword);
 
-🔹❌ 5. Consideraciones de Seguridad
+🔹 5. Consideraciones de Seguridad ❌
 
 Cifrado de Archivos:
 
