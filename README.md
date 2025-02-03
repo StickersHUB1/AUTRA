@@ -1,85 +1,151 @@
-Roadmap para la Digitalización de AUTRA
-
-(Basado en la solución WordPress + WPForms + PDF Interactivo)
-
-Hecho:✅
-
-En proceso: 🚧
+Roadmap para el Equipo de Desarrollo:
 
 Por hacer:❌
+En proceso:🚧
+Hecho:✅
 
-📌 Fase 1: Planificación y Preparación (1-2 semanas)
+🔹❌ 1. Uso de Endpoints en Node.js 
 
-🔹 Objetivo: Definir requisitos técnicos, seleccionar herramientas y preparar el entorno.
+Objetivo:
 
-🚧 Paso 1.1: Recopilar todos los PDFs que deben digitalizarse.
+Aislar la base de datos y controlar las operaciones mediante endpoints, evitando que el cliente acceda directamente a la base de datos.
 
-❌ Paso 1.2: Analizar la estructura de los formularios para identificar campos editables y opciones de anotaciones.
+Implementación:
 
-❌ Paso 1.3: Seleccionar el plugin adecuado para PDF interactivos en WordPress (PDF Embedder Pro o E2Pdf).
+❌ Configurar un servidor Node.js con Express que exponga únicamente los endpoints necesarios (por ejemplo, para autenticación, consulta y actualización de datos).
 
-❌ Paso 1.4: Configurar un entorno de pruebas en WordPress para hacer tests sin afectar la web en producción.
+❌ Validar en cada endpoint que solo se realicen las operaciones autorizadas.
 
-❌ Paso 1.5: Definir roles y permisos (terapeutas, pacientes) y los niveles de acceso a los formularios.
+❌ Asegurar que la base de datos esté protegida y nunca sea expuesta directamente al cliente.
+
+🔹❌ 2. Sistema Totalmente Privado (con VPS)
+
+Objetivo:
+
+Mantener un entorno seguro y privado en el que todos los dispositivos (clientes y servidor) estén en una red controlada, sin depender de servicios externos.
+
+Implementación:
+
+❌ Utilizar un VPS configurado para operar en un entorno privado.
+
+❌ Establecer reglas de firewall que limiten el acceso únicamente a dispositivos autorizados.
+
+❌ Asegurar la comunicación entre los dispositivos mediante una red privada virtual o configuraciones de red adecuadas en el VPS.
+
+🔹❌ 3. Base de Datos Simplificada con Archivos JSON
+
+Objetivo:
+
+Reducir la complejidad en la gestión de datos mediante el uso de archivos JSON en lugar de un motor de base de datos completo.
+
+Implementación:
+
+❌ Crear un archivo users.json (y otros que sean necesarios) para almacenar la información de los usuarios y otros datos relevantes.
+
+❌ Utilizar el módulo fs de Node.js para leer y escribir datos en los archivos.
+
+❌ Estructurar el archivo JSON de forma clara, por ejemplo:
+
+json
+
+[
+  {
+    "id": "user1",
+    "password": "hashed_password",
+    "name": "John Doe",
+    "role": "terapeuta"
+  },
+  {
+    "id": "user2",
+    "password": "hashed_password",
+    "name": "Jane Smith",
+    "role": "paciente"
+  }
+]
+
+Ventajas:
+
+No es necesario instalar ni gestionar un motor de base de datos complejo.
+
+Facilita la administración de datos en un entorno controlado.
+
+Permite cifrar los archivos para mayor seguridad.
+
+🔹❌ 4. Autenticación Básica con ID y Contraseña
+
+Objetivo:
+
+Proporcionar un sistema seguro de autenticación usando identificadores únicos y contraseñas.
+
+Implementación:
+
+❌ Asignar a cada usuario un ID único y una contraseña preconfigurada.
+
+❌ Utilizar la librería bcrypt para hashear las contraseñas antes de almacenarlas en el archivo JSON.
+
+❌ Generar IDs únicos con una librería como uuid para evitar duplicados.
+
+Ejemplo de uso de bcrypt:
+
+javascript
+
+const bcrypt = require('bcrypt');
+const hashedPassword = bcrypt.hashSync('mi_contraseña_secreta', 10);
+console.log(hashedPassword);
+
+🔹❌ 5. Consideraciones de Seguridad
+
+Cifrado de Archivos:
+
+❌ Utilizar el módulo crypto de Node.js para cifrar y descifrar los archivos JSON que contengan datos sensibles, empleando algoritmos como AES.
+
+javascript
+
+const crypto = require('crypto');
+
+const encrypt = (data, secretKey) => {
+  const cipher = crypto.createCipher('aes-256-cbc', secretKey);
+  let encrypted = cipher.update(data, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
+};
+
+const decrypt = (data, secretKey) => {
+  const decipher = crypto.createDecipher('aes-256-cbc', secretKey);
+  let decrypted = decipher.update(data, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+};
+
+❌ Restricciones de Red:
+
+❌ Configurar el firewall del VPS para permitir conexiones solo desde dispositivos autorizados.
+
+Registros de Acceso:
+
+❌ Implementar un sistema de logging para registrar intentos de acceso y operaciones, lo que facilitará el monitoreo y la detección de actividades sospechosas.
 
 
-📌 Fase 2: Implementación Técnica (2-3 semanas)
+🔹6. Viabilidad y Escalabilidad
 
-🔹 Objetivo: Integrar los formularios en la web y habilitar la interacción controlada.
+Viabilidad:
 
-❌ Paso 2.1: Instalar y configurar WPForms y el plugin de PDF interactivo.
+Este enfoque es práctico para un sistema pequeño o controlado con menos de 100 usuarios, ya que se mantiene bajo control y no depende de servicios externos.
 
-❌ Paso 2.2: Convertir los PDFs en formularios rellenables dentro de WPForms.
+Escalabilidad:
 
-❌ Paso 2.3: Configurar los permisos para que los terapeutas puedan habilitar el acceso al paciente.
+La solución puede expandirse en el futuro migrando a una base de datos más robusta si fuera necesario, sin necesidad de rehacer la estructura básica del sistema.
 
-❌ Paso 2.4: Implementar un sistema de token temporal para que los pacientes solo accedan durante la sesión.
+Conclusión
 
-❌ Paso 2.5: Pruebas iniciales con un grupo de terapeutas y pacientes ficticios.
+Este roadmap permite al equipo de desarrollo implementar un sistema seguro, privado y eficiente utilizando:
 
-❌ Paso 2.6: Ajustes según feedback recibido.
+Endpoints en Node.js para controlar y aislar el acceso a la base de datos.
 
+Un entorno privado en un VPS con configuraciones adecuadas de firewall y red.
 
-📌 Fase 3: Seguridad y Control de Acceso (1-2 semanas)
+Gestión de datos mediante archivos JSON para simplificar la configuración.
 
-🔹 Objetivo: Garantizar que los documentos sean privados y solo accesibles en sesión.
+Autenticación básica con técnicas modernas para garantizar la seguridad.
 
-❌ Paso 3.1: Implementar tokens temporales para acceso restringido del paciente.
-
-❌ Paso 3.2: Asegurar que el paciente no pueda descargar el documento.
-
-❌ Paso 3.3: Habilitar la opción de revocar acceso automáticamente tras la sesión.
-
-❌ Paso 3.4: Configurar alertas para el terapeuta en caso de acceso prolongado.
-
-❌ Paso 3.5: Validación de seguridad con pruebas de acceso controlado.
-
-
-📌 Fase 4: Experiencia de Usuario y Organización (2 semanas)
-
-🔹 Objetivo: Optimizar la usabilidad y organización de documentos.
-
-❌ Paso 4.1: Crear un Dashboard para Terapeutas donde gestionen sus documentos de pacientes.
-
-❌ Paso 4.2: Optimizar la visualización de los formularios para que sean intuitivos.
-
-❌ Paso 4.3: Implementar herramientas de anotaciones y marcaciones en rojo.
-
-❌ Paso 4.4: Probar la experiencia con usuarios reales y recopilar feedback.
-
-❌ Paso 4.5: Ajustar detalles de diseño y accesibilidad.
-
-
-📌 Fase 5: Lanzamiento y Optimización Continua (En curso)
-
-🔹 Objetivo: Desplegar el sistema en producción y mejorar según uso real.
-
-❌ Paso 5.1: Migrar la solución a la web oficial de AUTRA o hacer una navegacion desde la web oficial de AUTRA al sistema.
-
-❌ Paso 5.2: Capacitar a los terapeutas en el uso de la plataforma.
-
-❌ Paso 5.3: Monitorizar el uso y resolver incidencias.
-
-❌ Paso 5.4: Recopilar métricas de uso y ajustar funcionalidades según sea necesario.
-
-⏳ Estimación de Tiempo Total: Aproximadamente 2-3 meses
+Medidas de seguridad adicionales (cifrado, registros de acceso) para proteger la información.
