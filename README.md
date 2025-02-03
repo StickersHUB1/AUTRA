@@ -1,7 +1,9 @@
-Roadmap para el Equipo de Desarrollo:
+🔹Roadmap para el Equipo de Desarrollo:
 
 Por hacer:❌
+
 En proceso:🚧
+
 Hecho:✅
 
 🔹❌ 1. Uso de Endpoints en Node.js 
