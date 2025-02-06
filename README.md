@@ -7,7 +7,7 @@
 3. [Tecnologías](#tecnologías)
 4. [Fases del Proyecto](#fases-del-proyecto)
    - [1: Configuración del Entorno](#fase1)
-   - [Fase 2: Desarrollo del Backend](#fase-2-desarrollo-del-backend)
+   - [Fase 2: Desarrollo del Backend](#fase2)
    - [Fase 3: Implementación del Frontend](#fase-3-implementación-del-frontend)
    - [Fase 4: Digitalización y Automatización](#fase-4-digitalización-y-automatización)
    - [Fase 5: Despliegue, Seguridad y Optimización](#fase-5-despliegue-seguridad-y-optimización)
@@ -95,8 +95,7 @@ sudo ufw enable
 ```
 
 ---
-
-## **Fase 2: Desarrollo del Backend** ❌
+<h2 id="fase2">Fase 2: Desarrollo del Backend ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
 
