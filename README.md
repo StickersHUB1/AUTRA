@@ -44,7 +44,7 @@ Para garantizar un sistema robusto, confiable y escalable, se utilizarán las si
 
 El uso de **Node.js y Express** permite construir un backend ligero y eficiente, con una gestión de peticiones rápida y escalable. **pdf.js** es la herramienta ideal para la visualización de documentos PDF en el frontend, mientras que **PM2** facilita la gestión del backend en producción, asegurando que el servidor se mantenga operativo.
 -----------------------------------------------------------------------------------------------------------------------------------------
-FASES DEL PROYECTO - 1, 2, 3, 4, 5, 6.
+v v v - FASES DEL PROYECTO - v v v
 -----------------------------------------------------------------------------------------------------------------------------------------
 ## **Fase 1: Configuración del Entorno** ❌ {#fase-1-configuración-del-entorno}
 
