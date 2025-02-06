@@ -387,11 +387,9 @@ npm list pdf-lib
 
 2. Crear un endpoint en `server.js` para procesar el PDF:
 
-   ```javascript
    // Nota: pdf-parse no funcionará bien con PDFs escaneados. Considera OCR para esos casos.
 ---
-
-   ```
+   ```javascript
 const pdfParse = require('pdf-parse');
    app.post('/api/extraer-texto', async (req, res) => {
        const dataBuffer = fs.readFileSync('ruta/al/documento.pdf');
