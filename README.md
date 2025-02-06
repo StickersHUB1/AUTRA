@@ -6,7 +6,7 @@
 2. [Objetivos del Proyecto](#objetivos-del-proyecto)
 3. [Tecnologías](#tecnologías)
 4. [Fases del Proyecto](#fases-del-proyecto)
-   - [1: Configuración del Entorno](#1)
+   - [1: Configuración del Entorno](#fase1)
    - [Fase 2: Desarrollo del Backend](#fase-2-desarrollo-del-backend)
    - [Fase 3: Implementación del Frontend](#fase-3-implementación-del-frontend)
    - [Fase 4: Digitalización y Automatización](#fase-4-digitalización-y-automatización)
@@ -48,7 +48,7 @@ El uso de **Node.js y Express** permite construir un backend ligero y eficiente,
 -   A PARTIR DE AQUI SE MUESTRAN LAS FASES DEL PROYECTO
 ----------------------------------------------------------------------------------------------------------------------------------------
 
-## 1: Configuración del Entorno ❌
+<h2 id="fase1">1: Configuración del Entorno ❌</h2>
 
 Configuración del Entorno 
 
