@@ -1,4 +1,4 @@
-# **GUÍA SUPER DETALLADA Y MASTICADA PARA LA DIGITALIZACIÓN DE DOCUMENTOS Y TESTS TERAPÉUTICOS**
+# **GUÍA DETALLADA PARA LA DIGITALIZACIÓN DE AUTRA**
 
 ## **Índice**
 
@@ -6,15 +6,34 @@
 2. [Objetivos del Proyecto](#objetivos-del-proyecto)
 3. [Tecnologías](#tecnologías)
 4. [Fases del Proyecto](#fases-del-proyecto)
-   - [Fase 1: Configuración del Entorno](#fase-1-configuración-del-entorno)
-   - [Fase 2: Desarrollo del Backend](#fase-2-desarrollo-del-backend)
-   - [Fase 3: Implementación del Frontend](#fase-3-implementación-del-frontend)
-   - [Fase 4: Digitalización y Automatización](#fase-4-digitalización-y-automatización)
-   - [Fase 5: Despliegue, Seguridad y Optimización](#fase-5-despliegue-seguridad-y-optimización)
-   - [Fase 6: Pruebas y Validaciones Finales](#fase-6-pruebas-y-validaciones-finales)
+   - [Fase 1: Configuración del Entorno](#fase-1)
+   - [Fase 2: Desarrollo del Backend](#fase-2)
+   - [Fase 3: Implementación del Frontend](#fase-3)
+   - [Fase 4: Digitalización y Automatización](#fase-4)
+   - [Fase 5: Despliegue, Seguridad y Optimización](#fase-5)
+   - [Fase 6: Pruebas y Validaciones Finales](#fase-6)
 5. [Conclusión](#conclusión)
 
 ---
+
+## **Objetivos del Proyecto**
+
+Este proyecto tiene como objetivo la digitalización eficiente de documentos y tests terapéuticos mediante un sistema escalable, seguro y optimizado para entornos en la nube. Se busca:
+
+- **Automatizar** la captura, almacenamiento y procesamiento de documentos físicos.
+- **Garantizar la seguridad** en el manejo y almacenamiento de datos sensibles.
+- **Optimizar el acceso** a los documentos digitales a través de una interfaz intuitiva.
+- **Implementar herramientas robustas** para la gestión de PDFs y la manipulación de formularios electrónicos.
+
+## **Tecnologías**
+
+Para lograr estos objetivos, se emplearán las siguientes tecnologías:
+
+- **Backend:** Node.js con Express.js para la gestión de API y servidores.
+- **Frontend:** HTML5, CSS3, JavaScript y pdf.js para la manipulación de documentos.
+- **Base de Datos:** Almacenamiento en JSON con opción de escalabilidad a MongoDB o PostgreSQL.
+- **Infraestructura:** VPS con Ubuntu 20.04 LTS, utilizando Nginx como proxy inverso y Certbot para SSL.
+- **Gestión de Procesos:** PM2 para administración y monitoreo del servidor en producción.
 
 ## **Fase 1: Configuración del Entorno** ❌
 
@@ -692,5 +711,4 @@ Para ampliar conocimientos sobre las tecnologías utilizadas en esta guía, se r
 - **Certbot SSL:** [https://certbot.eff.org/](https://certbot.eff.org/)
 - **PM2:** [https://pm2.keymetrics.io/](https://pm2.keymetrics.io/)
 
-Siguiendo esta guía “masticada”, tendrás un sistema de digitalización funcional, seguro y escalable, listo para producción. 🚀
-
+Siguiendo esta guía, tendrás un sistema de digitalización funcional, seguro y escalable, listo para producción. 🚀
