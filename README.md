@@ -16,7 +16,7 @@
 
 ---
 
-## **Fase 1: Configuración del Entorno** ❌
+## **Fase 1: Configuración del Entorno** ❌ {#fase-1-configuración-del-entorno}
 
 📆 **Duración: aproximadamente 4 semanas**
 
