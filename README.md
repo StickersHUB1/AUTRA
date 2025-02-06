@@ -694,16 +694,3 @@ Para ampliar conocimientos sobre las tecnologías utilizadas en esta guía, se r
 
 Siguiendo esta guía “masticada”, tendrás un sistema de digitalización funcional, seguro y escalable, listo para producción. 🚀
 
-
-
-Este roadmap permite al equipo de desarrollo implementar un sistema seguro, privado y eficiente utilizando:
-
-Endpoints en Node.js para controlar y aislar el acceso a la base de datos.
-
-Un entorno privado en un VPS con configuraciones adecuadas de firewall y red.
-
-Gestión de datos mediante archivos JSON para simplificar la configuración.
-
-Autenticación básica con técnicas modernas para garantizar la seguridad.
-
-Medidas de seguridad adicionales (cifrado, registros de acceso) para proteger la información.
