@@ -16,6 +16,36 @@
 
 ---
 
+## **Introducción**
+
+Esta guía proporciona un plan detallado para la digitalización de documentos y la automatización de test terapéuticos mediante un sistema basado en tecnologías web. La digitalización es clave para optimizar los procesos administrativos y clínicos, facilitando el acceso a la información y mejorando la seguridad y la eficiencia del almacenamiento y recuperación de datos.
+
+La digitalización de documentos permite una mejor organización de los archivos, reducción del uso de papel y una mejora en la accesibilidad de la información, permitiendo que los documentos puedan ser consultados y editados desde cualquier lugar. Además, la automatización de test terapéuticos facilita la recopilación de datos, reduciendo errores humanos y mejorando la experiencia del usuario.
+
+## **Objetivos del Proyecto**
+
+- Digitalizar documentos en formato PDF para su procesamiento y almacenamiento.
+- Implementar un sistema web que permita a los usuarios interactuar con los documentos digitalizados de manera intuitiva y eficiente.
+- Asegurar la seguridad y escalabilidad del sistema mediante prácticas de desarrollo seguro y gestión de infraestructura eficiente.
+- Reducir el uso de papel y mejorar la sostenibilidad operativa en los procesos administrativos.
+- Implementar un backend sólido que permita la gestión eficiente de usuarios, documentos y resultados de test terapéuticos.
+- Desarrollar un frontend dinámico que proporcione una experiencia de usuario fluida e intuitiva.
+- Integrar herramientas de seguridad para la protección de los datos sensibles de los usuarios.
+
+## **Tecnologías**
+
+Para garantizar un sistema robusto, confiable y escalable, se utilizarán las siguientes tecnologías:
+
+- **Backend:** Node.js, Express, Nginx
+- **Frontend:** HTML, CSS, JavaScript, pdf.js
+- **Base de Datos:** JSON (posible migración a MongoDB o PostgreSQL según necesidades futuras)
+- **Infraestructura:** VPS con Ubuntu, Certbot SSL, PM2
+- **Seguridad:** Firewall UFW, SSL con Certbot, prácticas de seguridad en API REST
+
+El uso de **Node.js y Express** permite construir un backend ligero y eficiente, con una gestión de peticiones rápida y escalable. **pdf.js** es la herramienta ideal para la visualización de documentos PDF en el frontend, mientras que **PM2** facilita la gestión del backend en producción, asegurando que el servidor se mantenga operativo.
+-----------------------------------------------------------------------------------------------------------------------------------------
+FASES DEL PROYECTO - 1, 2, 3, 4, 5, 6.
+-----------------------------------------------------------------------------------------------------------------------------------------
 ## **Fase 1: Configuración del Entorno** ❌ {#fase-1-configuración-del-entorno}
 
 📆 **Duración: aproximadamente 4 semanas**
