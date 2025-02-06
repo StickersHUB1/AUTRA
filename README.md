@@ -6,9 +6,9 @@
 2. [Objetivos del Proyecto](#objetivos-del-proyecto)
 3. [Tecnologías](#tecnologías)
 4. [Fases del Proyecto](#fases-del-proyecto)
-   - [1: Configuración del Entorno](#fase1)
+   - [Fase 1: Configuración del Entorno](#fase1)
    - [Fase 2: Desarrollo del Backend](#fase2)
-   - [Fase 3: Implementación del Frontend](#fase-3-implementación-del-frontend)
+   - [Fase 3: Implementación del Frontend](#fase3)
    - [Fase 4: Digitalización y Automatización](#fase-4-digitalización-y-automatización)
    - [Fase 5: Despliegue, Seguridad y Optimización](#fase-5-despliegue-seguridad-y-optimización)
    - [Fase 6: Pruebas y Validaciones Finales](#fase-6-pruebas-y-validaciones-finales)
@@ -95,6 +95,7 @@ sudo ufw enable
 ```
 
 ---
+
 <h2 id="fase2">Fase 2: Desarrollo del Backend ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
@@ -175,7 +176,7 @@ sudo systemctl status nginx
 
 ---
 
-## **Fase 3: Implementación del Frontend** ❌
+<h2 id="fase3">Fase 3: Implementación del Frontend ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -213,7 +214,7 @@ mkdir -p digitalizacion/frontend/css digitalizacion/frontend/js digitalizacion/f
 
 ---
 
-## **Fase 4: Digitalización y Automatización** ❌
+<h2 id="fase3">Fase 4: Digitalización y Automatización ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
 
