@@ -35,7 +35,7 @@ Para lograr estos objetivos, se emplearán las siguientes tecnologías:
 - **Infraestructura:** VPS con Ubuntu 20.04 LTS, utilizando Nginx como proxy inverso y Certbot para SSL.
 - **Gestión de Procesos:** PM2 para administración y monitoreo del servidor en producción.
 
-## **Fase 1: Configuración del Entorno** ❌
+## **Fase 1: Configuración del Entorno** {#fase-1} ❌
 
 📆 **Duración: aproximadamente 4 semanas**
 
@@ -81,7 +81,7 @@ sudo ufw enable
 
 ---
 
-## **Fase 2: Desarrollo del Backend** ❌
+## **Fase 2: Desarrollo del Backend** {#fase-2} ❌
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -161,7 +161,7 @@ sudo systemctl status nginx
 
 ---
 
-## **Fase 3: Implementación del Frontend** ❌
+## **Fase 3: Implementación del Frontend** {#fase-3} ❌
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -199,7 +199,7 @@ mkdir -p digitalizacion/frontend/css digitalizacion/frontend/js digitalizacion/f
 
 ---
 
-## **Fase 4: Digitalización y Automatización** ❌
+## **Fase 4: Digitalización y Automatización** {#fase-4} ❌
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -386,7 +386,7 @@ const pdfParse = require('pdf-parse');
 
 ---
 
-## **Fase 5: Despliegue, Seguridad y Optimización** ❌
+## **Fase 5: Despliegue, Seguridad y Optimización** {#fase-5} ❌
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -433,7 +433,7 @@ pm2 startup
 
 ---
 
-## **Fase 6: Pruebas y Validaciones Finales** ❌
+## **Fase 6: Pruebas y Validaciones Finales** {#fase-6} ❌
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -711,5 +711,5 @@ Para ampliar conocimientos sobre las tecnologías utilizadas en esta guía, se r
 - **Certbot SSL:** [https://certbot.eff.org/](https://certbot.eff.org/)
 - **PM2:** [https://pm2.keymetrics.io/](https://pm2.keymetrics.io/)
 
-Siguiendo esta guía, tendrás un sistema de digitalización funcional, seguro y escalable, listo para producción. 🚀
+Siguiendo esta guía “masticada”, tendrás un sistema de digitalización funcional, seguro y escalable, listo para producción. 🚀
 
