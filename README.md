@@ -9,9 +9,9 @@
    - [Fase 1: Configuración del Entorno](#fase1)
    - [Fase 2: Desarrollo del Backend](#fase2)
    - [Fase 3: Implementación del Frontend](#fase3)
-   - [Fase 4: Digitalización y Automatización](#fase-4-digitalización-y-automatización)
-   - [Fase 5: Despliegue, Seguridad y Optimización](#fase-5-despliegue-seguridad-y-optimización)
-   - [Fase 6: Pruebas y Validaciones Finales](#fase-6-pruebas-y-validaciones-finales)
+   - [Fase 4: Digitalización y Automatización](#fase4)
+   - [Fase 5: Despliegue, Seguridad y Optimización](#fase5)
+   - [Fase 6: Pruebas y Validaciones Finales](#fase6)
 5. [Conclusión](#conclusión)
 
 ---
@@ -214,7 +214,7 @@ mkdir -p digitalizacion/frontend/css digitalizacion/frontend/js digitalizacion/f
 
 ---
 
-<h2 id="fase3">Fase 4: Digitalización y Automatización ❌</h2>
+<h2 id="fase4">Fase 4: Digitalización y Automatización ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -401,7 +401,7 @@ const pdfParse = require('pdf-parse');
 
 ---
 
-## **Fase 5: Despliegue, Seguridad y Optimización** ❌
+<h2 id="fase5">Fase 5: Despliegue, Seguridad y Optimización ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
 
@@ -448,7 +448,7 @@ pm2 startup
 
 ---
 
-## **Fase 6: Pruebas y Validaciones Finales** ❌
+<h2 id="fase6">Fase 6: Pruebas y Validaciones Finales ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
 
