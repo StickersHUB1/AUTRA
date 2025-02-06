@@ -391,13 +391,13 @@ npm list pdf-lib
    // Nota: pdf-parse no funcionará bien con PDFs escaneados. Considera OCR para esos casos.
 const pdfParse = require('pdf-parse');
 
+   ```
    app.post('/api/extraer-texto', async (req, res) => {
        const dataBuffer = fs.readFileSync('ruta/al/documento.pdf');
        pdfParse(dataBuffer).then(function(data) {
            res.json({ texto: data.text });
        });
    });
-   ```
 ```
 ---
 
