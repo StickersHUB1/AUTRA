@@ -1,11 +1,11 @@
-# **GUÍA DETALLADA PARA LA DIGITALIZACIÓN DE AUTRA**
+# **GUÍA SUPER DETALLADA Y MASTICADA PARA LA DIGITALIZACIÓN DE DOCUMENTOS Y TESTS TERAPÉUTICOS**
 
 ## **Índice**
 
 1. [Introducción](#introducción)
 2. [Objetivos del Proyecto](#objetivos-del-proyecto)
 3. [Tecnologías](#tecnologías)
-4. [Fases del Proyecto](#fases-del-proyecto)
+4. Fases del Proyecto
    - [Fase 1: Configuración del Entorno](#fase-1)
    - [Fase 2: Desarrollo del Backend](#fase-2)
    - [Fase 3: Implementación del Frontend](#fase-3)
@@ -712,3 +712,4 @@ Para ampliar conocimientos sobre las tecnologías utilizadas en esta guía, se r
 - **PM2:** [https://pm2.keymetrics.io/](https://pm2.keymetrics.io/)
 
 Siguiendo esta guía, tendrás un sistema de digitalización funcional, seguro y escalable, listo para producción. 🚀
+
