@@ -6,7 +6,7 @@
 2. [Objetivos del Proyecto](#objetivos-del-proyecto)
 3. [Tecnologías](#tecnologías)
 4. [Fases del Proyecto](#fases-del-proyecto)
-   - [Fase 1: Configuración del Entorno](#fase-1-configuración-del-entorno)
+   - [Fase 1: Configuración del Entorno](#fase-1--configuración-del-entorno-)
    - [Fase 2: Desarrollo del Backend](#fase-2-desarrollo-del-backend)
    - [Fase 3: Implementación del Frontend](#fase-3-implementación-del-frontend)
    - [Fase 4: Digitalización y Automatización](#fase-4-digitalización-y-automatización)
