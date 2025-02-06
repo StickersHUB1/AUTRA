@@ -399,7 +399,7 @@ const pdfParse = require('pdf-parse');
    });
    ```
 
-
+---
 ```
 <h2 id="fase5">Fase 5: Despliegue, Seguridad y Optimización ❌</h2>
 
