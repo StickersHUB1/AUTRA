@@ -35,7 +35,7 @@ Para lograr estos objetivos, se emplearán las siguientes tecnologías:
 - **Infraestructura:** VPS con Ubuntu 20.04 LTS, utilizando Nginx como proxy inverso y Certbot para SSL.
 - **Gestión de Procesos:** PM2 para administración y monitoreo del servidor en producción.
 
-## **Fase 1: Configuración del Entorno** (#fase-1)
+## **Fase 1: Configuración del Entorno** {#fase-1}
 
 📆 **Duración: aproximadamente 4 semanas**
 
