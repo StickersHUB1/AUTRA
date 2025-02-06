@@ -398,10 +398,11 @@ const pdfParse = require('pdf-parse');
        });
    });
    ```
-
----
 ```
-<h2 id="fase5">Fase 5: Despliegue, Seguridad y Optimización ❌</h2>
+---
+
+
+<h2 id="fase5"><strong>Fase 5: Despliegue, Seguridad y Optimización</strong> ❌</h2>
 
 📆 **Duración: aproximadamente 3 semanas**
 
