@@ -89,5 +89,3 @@
   - Considerar la migración a bases de datos más robustas.
   - Automatizar más procesos para reducir el trabajo manual.
   - Mejorar la escalabilidad utilizando balanceo de carga y tecnologías de contenedores como Docker.
-
-Este roadmap detalla el camino hacia una solución digitalizada, automatizada y segura para gestionar documentos y tests terapéuticos, diseñada para impresionar por su complejidad y eficiencia. 🚀
