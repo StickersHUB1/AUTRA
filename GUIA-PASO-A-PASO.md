@@ -52,7 +52,7 @@ El uso de **Node.js y Express** permite construir un backend ligero y eficiente,
 
 Configuración del Entorno 
 
-📆 **Duración: aproximadamente 4 semanas**
+📆 **Duración: aproximadamente 3 semanas**
 
 ### **Paso 1: Conectar al VPS y Preparar el Sistema**
 
@@ -403,7 +403,7 @@ const pdfParse = require('pdf-parse');
 
 <h2 id="fase5"><strong>Fase 5: Despliegue, Seguridad y Optimización</strong> ❌</h2>
 
-📆 **Duración: aproximadamente 3 semanas**
+📆 **Duración: aproximadamente 4 semanas**
 
 ### **Paso 13: Implementar Certificado SSL con Certbot**
 
@@ -450,7 +450,7 @@ pm2 startup
 
 <h2 id="fase6">Fase 6: Pruebas y Validaciones Finales ❌</h2>
 
-📆 **Duración: aproximadamente 3 semanas**
+📆 **Duración: aproximadamente 4 semanas**
 
 ### **Paso 15: Validar el Funcionamiento del Sistema**
 
