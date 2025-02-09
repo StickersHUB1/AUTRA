@@ -48,6 +48,8 @@ El uso de **Node.js y Express** permite construir un backend ligero y eficiente,
 -   A PARTIR DE AQUI SE MUESTRAN LAS FASES DEL PROYECTO
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+(Las fechas son relativas y a lo mejor se tarda menos en algunos puntos).
+
 <h2 id="fase1">Fase 1: Configuración del Entorno ❌</h2>
 
 Configuración del Entorno 
