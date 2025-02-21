@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenido a Autra Digital</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #F9EEE0;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    header {
+      margin-bottom: 20px;
+    }
+    header img {
+      max-width: 200px;
+    }
+    h1 {
+      color: #545454;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: flex;
+      gap: 20px;
+    }
+    button {
+      background-color: #000000;
+      color: #FFFFFF;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #333333;
+    }
+    button i {
+      margin-right: 10px;
+    }
+    @media (max-width: 768px) {
+      .buttons {
+        flex-direction: column;
+        width: 80%;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logotipo.png" alt="Autra Digital Logo">
+  </header>
+  <h1>Bienvenido a Autra Digital</h1>
+  <div class="buttons">
+    <button onclick="window.location.href='./login.html'"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button onclick="window.location.href='./register.html'"><i class="fas fa-user-plus"></i> Registrarse</button>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script>
+    console.log('Página de inicio cargada correctamente.');
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+      authDomain: "autra-digital.firebaseapp.com",
+      projectId: "autra-digital",
+      storageBucket: "autra-digital.firebasestorage.app",
+      messagingSenderId: "149401206632",
+      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
+      measurementId: "G-MEVPRYBQC1"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Avanzado - Autra Digital</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #F9EEE0;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      width: 100%;
+      background-color: #FFFFFF;
+      padding: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    header img {
+      max-width: 200px;
+      margin-left: 20px;
+    }
+    h1 {
+      color: #545454;
+      font-size: 24px;
+      margin: 20px 0;
+    }
+    .dashboard {
+      background-color: #FFFFFF;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 800px;
+    }
+    .logout-button {
+      background-color: #000000;
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background-color 0.3s;
+    }
+    .logout-button:hover {
+      background-color: #333333;
+    }
+    .logout-button i {
+      margin-right: 5px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      color: #737373;
+      font-size: 18px;
+    }
+    .section p {
+      color: #545454;
+      font-size: 16px;
+    }
+    @media (max-width: 768px) {
+      .dashboard {
+        width: 90%;
+      }
+      .logout-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logotipo.png" alt="Autra Digital Logo">
+  </header>
+  <h1>Bienvenido, Terapeuta/Formador</h1>
+  <div class="dashboard">
+    <button class="logout-button" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+    <div class="section">
+      <h2>Funciones avanzadas</h2>
+      <p>Aquí irán estadísticas, herramientas especializadas y más funciones avanzadas.</p>
+    </div>
+    <div class="section">
+      <h2>Proyectos actuales</h2>
+      <p>Gestión de pacientes, sesiones y reportes.</p>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script>
+    console.log('Dashboard avanzado cargado correctamente.');
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+      authDomain: "autra-digital.firebaseapp.com",
+      projectId: "autra-digital",
+      storageBucket: "autra-digital.firebasestorage.app",
+      messagingSenderId: "149401206632",
+      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
+      measurementId: "G-MEVPRYBQC1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function logout() {
+      console.log('Intentando cerrar sesión.');
+      auth.signOut()
+        .then(() => {
+          console.log('Sesión cerrada con éxito.');
+          window.location.href = './index.html';
+        })
+        .catch((error) => {
+          console.error('Error al cerrar sesión:', error.message);
+          alert('Error al cerrar sesión: ' + error.message);
+        });
+    }
+  </script>
+</body>
+</html>
