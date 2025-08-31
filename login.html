@@ -14,8 +14,8 @@
       --bg2: #F9EEE0;
       --glass-bg: rgba(255, 255, 255, 0.15);
       --glass-stroke: rgba(255, 255, 255, 0.25);
-      --text-important: #545454; /* títulos, labels fuertes */
-      --text-normal: #737373;     /* texto general */
+      --text-important: #545454;
+      --text-normal: #737373;
       --accent: #ABC8E9;
       --shadow: rgba(0, 0, 0, 0.25);
       --radius: 24px;
@@ -62,7 +62,6 @@
     h1 { margin: 8px 0 6px; font-size: clamp(22px, 4.2vw, 34px); line-height: 1.08; color: var(--text-important); font-family: 'Montserrat', sans-serif; }
     .subtitle { color: var(--text-normal); margin-bottom: 18px; }
 
-    /* Back button -> coherente con landing */
     .back-button {
       display: inline-flex; align-items: center; gap: 8px;
       background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12));
@@ -169,7 +168,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-  <!-- Lógica original respetada -->
+  <!-- Lógica -->
   <script>
     console.log('Página de inicio de sesión cargada correctamente.');
     const firebaseConfig = {
@@ -181,39 +180,41 @@
       appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
       measurementId: "G-MEVPRYBQC1"
     };
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // Si ya está logueado, ir directo a Inicio
+    auth.onAuthStateChanged((u) => { if (u) window.location.href = './inicio.html'; });
+
     document.getElementById('loginForm').addEventListener('submit', (e) => {
-      e.preventDefault(); // Aseguramos que no se envíe el formulario por defecto
-      console.log('Formulario de inicio de sesión enviado.');
+      e.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-
       console.log(`Intentando iniciar sesión con Email=${email}`);
 
       auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          console.log('Inicio de sesión exitoso, UID:', userCredential.user.uid);
+        .then(async (userCredential) => {
           const user = userCredential.user;
-          return db.collection('users').doc(user.uid).get()
-            .then((doc) => {
-              if (doc.exists) {
-                console.log('Rol encontrado en Firestore:', doc.data().role);
-                const role = doc.data().role;
-                if (role === 'Terapeuta' || role === 'Formador') {
-                  window.location.href = './dashboard_avanzado.html'; // Ruta relativa limpia
-                  console.log('Redirigiendo a dashboard avanzado.');
-                } else if (role === 'Paciente') {
-                  window.location.href = './dashboard_basico.html'; // Ruta relativa limpia
-                  console.log('Redirigiendo a dashboard básico.');
-                }
-              } else {
-                console.error('No se encontró el rol del usuario en Firestore.');
-                alert('No se encontró el rol del usuario. Verifica que el rol se guardó en Firestore.');
-              }
-            });
+          console.log('Inicio de sesión exitoso, UID:', user.uid);
+
+          try {
+            // Resolvemos rol y lo dejamos cacheado para Inicio → Perfil
+            const snap = await db.collection('users').doc(user.uid).get();
+            if (snap.exists) {
+              let role = snap.data().role || null;
+              if (role === 'Formador') role = 'Admin'; // compat legacy
+              sessionStorage.setItem('autra_user', JSON.stringify({ uid: user.uid, role, ts: Date.now() }));
+              console.log('Rol cacheado para Inicio:', role);
+            } else {
+              console.warn('No se encontró el documento de rol; Inicio lo resolverá.');
+            }
+          } catch (err) {
+            console.error('Error leyendo rol:', err);
+          }
+
+          // Nueva redirección unificada
+          window.location.href = './inicio.html';
         })
         .catch((error) => {
           console.error('Error al iniciar sesión:', error.message);
