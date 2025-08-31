@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio – Autra Digital</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Tipografías -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg1:#ABC8E9; --bg2:#F9EEE0;
+      --text-strong:#545454; --text:#737373;
+      --accent:#ABC8E9; --glass-stroke:rgba(171,200,233,.35);
+      --glass:#ffffffb3; /* 70% */
+      --glass-soft:#ffffffa6; /* 65% */
+      --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
+      --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:auto}
+    body{
+      margin:0; font-family:'Lato', Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      color:var(--text);
+      background:radial-gradient(1200px 800px at 85% -10%, rgba(171,200,233,.35), transparent 60%),
+                 radial-gradient(900px 700px at -10% 100%, rgba(171,200,233,.25), transparent 55%),
+                 linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    }
+    .orb{position:fixed; filter:blur(40px); opacity:.7; pointer-events:none}
+    .orb.one{width:420px;height:420px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); top:-120px; right:-80px}
+    .orb.two{width:520px;height:520px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); bottom:-140px; left:-120px}
+
+    /* ===== Topbar ===== */
+    .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%); -webkit-backdrop-filter:blur(14px) saturate(120%);
+      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4)); border-bottom:1px solid var(--glass-stroke);
+      box-shadow:0 8px 30px rgba(0,0,0,.06)}
+    .topbar .container{max-width:1100px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:16px; justify-content:space-between}
+    .brand{display:flex; align-items:center; gap:12px}
+    .brand img{width:36px; height:36px; object-fit:contain}
+    .brand h1{font:700 18px/1.1 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
+    nav ul{display:flex; list-style:none; gap:8px; margin:0; padding:0}
+    .tab{appearance:none; border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px; font:600 14px/1 'Montserrat', sans-serif; color:var(--text-strong);
+      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+    .tab[aria-current="page"]{box-shadow:var(--focus)}
+    .tab:focus-visible{outline:none; box-shadow:var(--focus)}
+
+    /* ===== Layout ===== */
+    .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
+    .hero{display:grid; grid-template-columns:minmax(240px,360px) 1fr; gap:18px; align-items:center; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, var(--glass), var(--glass-soft)); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+    .heroMedia{position:relative; overflow:hidden; border-radius:16px; background:radial-gradient(120% 120% at 0% 0%, rgba(171,200,233,.35), transparent 60%), #fff}
+    .heroMedia img{width:100%; height:100%; object-fit:cover; display:block; mix-blend:normal; filter:contrast(1.02) saturate(1.02)}
+    .heroText h2{font:700 24px/1.15 'Montserrat', sans-serif; color:var(--text-strong); margin:6px 0 8px}
+    .heroText p{margin:0 0 8px}
+    @media (max-width:780px){.hero{grid-template-columns:1fr}}
+
+    .feed{display:grid; grid-template-columns:1fr; gap:16px; margin-top:16px}
+    @media (min-width:780px){.feed{grid-template-columns:1fr}}
+
+    /* ===== Tarjetas de terapeuta ===== */
+    .card{position:relative; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78)); border-radius:18px; padding:16px; box-shadow:var(--shadow)}
+    .cardHeader{display:flex; align-items:center; gap:12px; margin-bottom:10px}
+    .avatar{width:48px; height:48px; border-radius:50%; background:radial-gradient(circle, #fff 0%, #e8eef7 70%); display:grid; place-items:center; border:1px solid var(--glass-stroke); font-weight:700; font-family:'Montserrat', sans-serif; color:var(--text-strong)}
+    .name{margin:0; font:700 18px/1.2 'Montserrat', sans-serif; color:var(--text-strong)}
+    .meta{font-size:13px; color:var(--text)}
+    .tags{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0}
+    .tag{font:600 12px/1 'Montserrat', sans-serif; color:var(--text-strong); border:1px solid var(--glass-stroke); padding:6px 8px; border-radius:999px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.75))}
+    .desc{font-size:14px; margin:10px 0 12px}
+    .actions{display:flex; gap:8px; flex-wrap:wrap}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
+    .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
+
+    /* Sutilezas */
+    .sr-only{position:absolute!important; width:1px;height:1px; padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <!-- Decor -->
+  <div class="orb one" aria-hidden="true"></div>
+  <div class="orb two" aria-hidden="true"></div>
+
+  <!-- Topbar (común en Inicio / Dashboards) -->
+  <header class="topbar" role="banner">
+    <div class="container">
+      <a class="brand" href="./inicio.html" aria-label="Autra Digital">
+        <img src="logotipo.png" alt="Autra Digital Logo" />
+        <h1>Autra Digital</h1>
+      </a>
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a class="tab" aria-current="page" href="./inicio.html"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a id="perfilLink" class="tab" href="#"><i class="fas fa-user"></i> Perfil</a></li>
+          <li><a id="btnSalir" class="tab" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" role="main">
+    <!-- Intro / Hero suave -->
+    <section class="hero" aria-label="Resumen">
+      <div class="heroMedia" aria-hidden="true">
+        <img src="logotipo.png" alt="" loading="lazy" />
+      </div>
+      <div class="heroText">
+        <p class="sr-only">Resumen de novedades de terapeutas</p>
+        <h2>Bienvenido a tu Inicio</h2>
+        <p>Aquí verás un <strong>feed de terapeutas</strong>: perfiles destacados, especialidades y últimas publicaciones.</p>
+        <p>Usa <em>Perfil</em> para gestionar tu área privada.</p>
+        <a href="#feed" class="btn"><i class="fas fa-stream" aria-hidden="true"></i> Explorar terapeutas</a>
+      </div>
+    </section>
+
+    <!-- Feed de terapeutas (plantillas) -->
+    <section class="feed" aria-label="Terapeutas" role="list" id="feed">
+      <!-- Plantilla 1: Terapeuta Individual (destacado) -->
+      <article class="card" role="listitem">
+        <header class="cardHeader">
+          <div class="avatar" aria-hidden="true">AG</div>
+          <div>
+            <h3 class="name">Ana Gómez</h3>
+            <div class="meta">Psicóloga sanitaria · Madrid · 8 años exp.</div>
+          </div>
+        </header>
+        <div class="tags">
+          <span class="tag">Ansiedad</span>
+          <span class="tag">Terapia Cognitivo-Conductual</span>
+          <span class="tag">Adultos</span>
+        </div>
+        <p class="desc">Ayudo a personas con ansiedad y estrés a recuperar control con protocolos breves y medibles. Sesiones online y presenciales.</p>
+        <div class="actions">
+          <a href="#" class="btn"><i class="fas fa-user-md"></i> Ver perfil</a>
+          <a href="#" class="btn"><i class="fas fa-paper-plane"></i> Contactar</a>
+        </div>
+      </article>
+
+      <!-- Plantilla 2: Equipo/Centro (multi-terapeuta) -->
+      <article class="card" role="listitem">
+        <header class="cardHeader">
+          <div class="avatar" aria-hidden="true">CE</div>
+          <div>
+            <h3 class="name">Centro Equilibrio</h3>
+            <div class="meta">Equipo de 5 terapeutas · Barcelona · Atención integral</div>
+          </div>
+        </header>
+        <div class="tags">
+          <span class="tag">Infanto-juvenil</span>
+          <span class="tag">Mindfulness</span>
+          <span class="tag">Pareja</span>
+        </div>
+        <p class="desc">Unidad con especialistas en terapia familiar, de pareja e infancia. Derivación interna ágil y plan de tratamiento conjunto.</p>
+        <div class="actions">
+          <a href="#" class="btn"><i class="fas fa-clinic-medical"></i> Ver centro</a>
+          <a href="#" class="btn"><i class="fas fa-calendar-check"></i> Pedir cita</a>
+        </div>
+      </article>
+
+      <!-- Plantilla 3: Terapeuta con contenido/última publicación -->
+      <article class="card" role="listitem">
+        <header class="cardHeader">
+          <div class="avatar" aria-hidden="true">JM</div>
+          <div>
+            <h3 class="name">Jorge Martín</h3>
+            <div class="meta">Neuropsicólogo · Valencia · 6 años exp.</div>
+          </div>
+        </header>
+        <div class="tags">
+          <span class="tag">Neuro rehab</span>
+          <span class="tag">TDAH</span>
+          <span class="tag">Evaluación</span>
+        </div>
+        <p class="desc"><strong>Nuevo artículo:</strong> “Hábitos que mejoran la atención en TDAH adulto”. Enfoque práctico con ejercicios semanales.</p>
+        <div class="actions">
+          <a href="#" class="btn"><i class="fas fa-newspaper"></i> Leer</a>
+          <a href="#" class="btn"><i class="fas fa-user"></i> Ver perfil</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script>
+    // Config / init (idéntico al resto de páginas)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+      authDomain: "autra-digital.firebaseapp.com",
+      projectId: "autra-digital",
+      storageBucket: "autra-digital.firebasestorage.app",
+      messagingSenderId: "149401206632",
+      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
+      measurementId: "G-MEVPRYBQC1"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const perfilLink = document.getElementById('perfilLink');
+    const btnSalir = document.getElementById('btnSalir');
+
+    // Guard + resolución de rol para el botón "Perfil"
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = './login.html';
+        return;
+      }
+      try {
+        // Cache ligera en sessionStorage
+        const cache = sessionStorage.getItem('autra_user');
+        let role = null;
+        if (cache) {
+          try { role = JSON.parse(cache).role || null; } catch(_) {}
+        }
+        if (!role) {
+          const snap = await db.collection('users').doc(user.uid).get();
+          role = snap.exists ? snap.data().role : null;
+          if (role === 'Formador') role = 'Admin'; // compat legacy
+          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
+        }
+        // Destino dinámico del perfil
+        if (role === 'Paciente') perfilLink.href = './dashboard_basico.html';
+        else perfilLink.href = './dashboard_avanzado.html'; // Terapeuta/Admin por defecto
+      } catch (err) {
+        console.error('Error resolviendo rol:', err);
+        perfilLink.href = './dashboard_basico.html';
+      }
+    });
+
+    btnSalir.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await auth.signOut(); } finally { window.location.href = './index.html'; }
+    });
+
+    // NOTA: El feed actual usa plantillas estáticas. 
+    // Cuando tengas la colección (p.ej. therapists), aquí haces un fetch y renderizas.
+  </script>
+</body>
+</html>
