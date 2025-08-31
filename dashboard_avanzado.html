@@ -1,104 +1,231 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Avanzado - Autra Digital</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil – Terapeuta | Autra Digital</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    body {
-      background-color: #F9EEE0;
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+    :root{
+      --bg1:#ABC8E9; --bg2:#F9EEE0;
+      --text-strong:#545454; --text:#737373;
+      --accent:#ABC8E9; --glass-stroke:rgba(171,200,233,.35);
+      --glass:rgba(255,255,255,.12); --glass-strong:rgba(255,255,255,.22);
+      --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
+      --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
+      --overlay: rgba(245, 245, 245, .75);
     }
-    header {
-      width: 100%;
-      background-color: #FFFFFF;
-      padding: 10px 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:auto}
+    body{
+      margin:0; font-family:'Lato', Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      color:var(--text);
+      background:radial-gradient(1200px 800px at 85% -10%, rgba(171,200,233,.35), transparent 60%),
+                 radial-gradient(900px 700px at -10% 100%, rgba(171,200,233,.25), transparent 55%),
+                 linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;
     }
-    header img {
-      max-width: 200px;
-      margin-left: 20px;
-    }
-    h1 {
-      color: #545454;
-      font-size: 24px;
-      margin: 20px 0;
-    }
-    .dashboard {
-      background-color: #FFFFFF;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 800px;
-    }
-    .logout-button {
-      background-color: #000000;
-      color: #FFFFFF;
-      border: none;
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-bottom: 20px;
-      transition: background-color 0.3s;
-    }
-    .logout-button:hover {
-      background-color: #333333;
-    }
-    .logout-button i {
-      margin-right: 5px;
-    }
-    .section {
-      margin-bottom: 20px;
-    }
-    .section h2 {
-      color: #737373;
-      font-size: 18px;
-    }
-    .section p {
-      color: #545454;
-      font-size: 16px;
-    }
-    @media (max-width: 768px) {
-      .dashboard {
-        width: 90%;
-      }
-      .logout-button {
-        width: 100%;
-      }
+    .orb{position:fixed; filter:blur(40px); opacity:.7; pointer-events:none}
+    .orb.one{width:420px;height:420px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); top:-120px; right:-80px}
+    .orb.two{width:520px;height:520px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); bottom:-140px; left:-120px}
+
+    /* Topbar unificado */
+    .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%); -webkit-backdrop-filter:blur(14px) saturate(120%);
+      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4)); border-bottom:1px solid var(--glass-stroke);
+      box-shadow:0 8px 30px rgba(0,0,0,.06)}
+    .topbar .container{max-width:1100px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:16px; justify-content:space-between}
+    .brand{display:flex; align-items:center; gap:12px}
+    .brand img{width:36px; height:36px; object-fit:contain}
+    .brand h1{font:700 18px/1.1 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
+    nav ul{display:flex; list-style:none; gap:8px; margin:0; padding:0}
+    .tab{appearance:none; border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px; font:600 14px/1 'Montserrat', sans-serif; color:var(--text-strong);
+      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+    .tab[aria-current="page"]{box-shadow:var(--focus)}
+    .tab:focus-visible{outline:none; box-shadow:var(--focus)}
+
+    .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
+
+    /* Layout principal */
+    .layout{display:flex; gap:20px; flex-wrap:wrap; justify-content:space-between}
+    .left-panel,.right-panel{backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
+      background:var(--glass); border:1px solid var(--glass-stroke); border-radius:16px; box-shadow:var(--shadow); padding:16px}
+    .left-panel{flex:2; min-width:560px}
+    .right-panel{flex:1; min-width:300px; display:flex; flex-direction:column; align-items:center}
+
+    /* Perfil (disponible) */
+    .foto-perfil{width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:12px; border:1px solid var(--glass-stroke); box-shadow:var(--shadow); background:#fff}
+    .nombre{font:700 1.15rem 'Montserrat', sans-serif; color:var(--text-strong); margin:2px 0 6px}
+    .especialidad,.personalidad{font-size:.95rem; color:var(--text)}
+    .descripcion{font-size:.9rem; color:var(--text); text-align:center; margin:10px 0; max-width:90%}
+    .actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; justify-content:center}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
+    .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
+
+    /* Tabla pacientes (en obras) */
+    table{width:100%; border-collapse:separate; border-spacing:0 8px; color:var(--text); font-size:.92rem; table-layout:fixed}
+    th,td{padding:.85rem 1rem; vertical-align:middle}
+    th{text-align:left; color:var(--text-strong); font-weight:700; border-bottom:1px solid var(--glass-stroke)}
+    td{background:var(--glass); border-radius:8px; border:1px solid var(--glass-stroke)}
+
+    /* Overlays de mantenimiento */
+    .is-disabled{position:relative}
+    .is-disabled *{pointer-events:none}
+    .is-disabled .block-overlay{position:absolute; inset:0; background:var(--overlay); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); border-radius:inherit; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px}
+    .overlay-badge{font:700 .95rem 'Montserrat', sans-serif; color:#333; display:inline-flex; align-items:center; gap:10px}
+
+    /* Modales simples */
+    .modal{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:50}
+    .modal.open{display:flex}
+    .modal-card{width:min(92vw, 480px); border-radius:16px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78)); box-shadow:var(--shadow); padding:16px}
+    .modal-card h3{margin:0 0 10px; font:700 1.05rem 'Montserrat', sans-serif; color:var(--text-strong)}
+    .field{margin:10px 0}
+    .field label{display:block; font:600 .9rem 'Montserrat', sans-serif; color:var(--text-strong); margin-bottom:6px}
+    .field input[type="text"], .field textarea, .field select{width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke); background:#fff; font:.95rem 'Lato', sans-serif; color:var(--text-strong)}
+    .modal-actions{display:flex; gap:8px; justify-content:flex-end; margin-top:12px}
+
+    @media (max-width: 768px){
+      .left-panel{min-width:100%}
+      .right-panel{min-width:100%}
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logotipo.png" alt="Autra Digital Logo">
-  </header>
-  <h1>Bienvenido, Terapeuta/Formador</h1>
-  <div class="dashboard">
-    <button class="logout-button" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-    <div class="section">
-      <h2>Funciones avanzadas</h2>
-      <p>Aquí irán estadísticas, herramientas especializadas y más funciones avanzadas.</p>
+  <div class="orb one" aria-hidden="true"></div>
+  <div class="orb two" aria-hidden="true"></div>
+
+  <!-- Topbar unificado -->
+  <header class="topbar" role="banner">
+    <div class="container">
+      <a class="brand" href="./inicio.html" aria-label="Autra Digital">
+        <img src="logotipo.png" alt="Autra Digital Logo" />
+        <h1>Autra Digital</h1>
+      </a>
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a class="tab" href="./inicio.html"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a class="tab" aria-current="page" href="./dashboard_avanzado.html"><i class="fas fa-user"></i> Perfil</a></li>
+          <li><a id="btnSalir" class="tab" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+        </ul>
+      </nav>
     </div>
-    <div class="section">
-      <h2>Proyectos actuales</h2>
-      <p>Gestión de pacientes, sesiones y reportes.</p>
+  </header>
+
+  <main class="wrap">
+    <section class="layout">
+      <!-- Panel izquierdo: Pacientes (en obras) -->
+      <div class="left-panel is-disabled" data-feature="patients">
+        <div class="block-overlay" role="status" aria-live="polite">
+          <div class="overlay-badge">🚧 En obras · Estamos mejorándolo 🛠️</div>
+        </div>
+        <div class="top-left-info">Número de utilizaciones: <strong id="uso-total">—</strong></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Dinero</th>
+              <th>Acceso</th>
+              <th>Anotaciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-pacientes"><!-- vacío --></tbody>
+        </table>
+      </div>
+
+      <!-- Panel derecho: Perfil (disponible) -->
+      <div class="right-panel">
+        <img id="fotoPerfil" class="foto-perfil" alt="Foto de perfil" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><circle cx='60' cy='60' r='60' fill='%23f2f2f2'/><circle cx='60' cy='46' r='22' fill='%23d9d9d9'/><path d='M20 108c8-24 36-32 40-32s34 8 40 32' fill='%23d9d9d9'/></svg>">
+        <h2 id="nombreUsuario" class="nombre">—</h2>
+        <div class="especialidad">Especialidad: <span id="especialidadText">—</span></div>
+        <div class="personalidad">Personalidad: <strong id="tonoPersonalidad">—</strong></div>
+        <p id="descPersonalidad" class="descripcion">—</p>
+
+        <div class="actions">
+          <button id="btnCambiarFoto" class="btn"><i class="fas fa-camera"></i> Cambiar foto</button>
+          <button id="btnEditarEspecialidad" class="btn"><i class="fas fa-user-tag"></i> Editar especialidad</button>
+          <button id="btnEditarPersonalidad" class="btn"><i class="fas fa-user-edit"></i> Editar personalidad</button>
+          <button id="btnEditarDescripcion" class="btn"><i class="fas fa-align-left"></i> Editar descripción</button>
+        </div>
+
+        <!-- Bloques de reseñas/comentarios (en obras) -->
+        <div class="is-disabled" data-feature="reviews" style="margin-top:16px; width:100%">
+          <div class="block-overlay" role="status" aria-live="polite">
+            <div class="overlay-badge">🚧 En obras · Reseñas y valoraciones 🛠️</div>
+          </div>
+          <div class="estrellas" id="estrellas"></div>
+          <div class="nota-media">Nota media: <strong>—</strong></div>
+          <div class="comentarios-container">
+            <h3 class="comentarios-titulo">Comentarios (<span id="comment-count">0</span>)</h3>
+            <div id="comentarios-list"><!-- vacío --></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="margin:24px auto; text-align:center; color:var(--text); font:.9rem 'Lato', sans-serif; opacity:.8">
+    © 2025 Autra Digital
+  </footer>
+
+  <!-- Modales -->
+  <div id="modalEspecialidad" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalEspecialidadTitle">
+      <h3 id="modalEspecialidadTitle">Editar especialidad</h3>
+      <div class="field">
+        <label for="inputEspecialidad">Especialidad</label>
+        <input id="inputEspecialidad" type="text" placeholder="Ej. Terapia Cognitivo-Conductual" maxlength="60" />
+      </div>
+      <div class="modal-actions">
+        <button id="saveEspecialidad" class="btn"><i class="fas fa-save"></i> Guardar</button>
+        <button data-close="modalEspecialidad" class="btn"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
     </div>
   </div>
+
+  <div id="modalPersonalidad" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalPersonalidadTitle">
+      <h3 id="modalPersonalidadTitle">Editar personalidad</h3>
+      <div class="field">
+        <label for="selectTono">Tono</label>
+        <select id="selectTono">
+          <option value="Empático">Empático</option>
+          <option value="Firme">Firme</option>
+          <option value="Neutral">Neutral</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="textareaPersonalidad">Descripción breve</label>
+        <textarea id="textareaPersonalidad" rows="5" placeholder="Describe tu estilo de trabajo..." maxlength="800"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button id="savePersonalidad" class="btn"><i class="fas fa-save"></i> Guardar</button>
+        <button data-close="modalPersonalidad" class="btn"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalDescripcion" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalDescripcionTitle">
+      <h3 id="modalDescripcionTitle">Editar descripción</h3>
+      <div class="field">
+        <label for="textareaDescripcion">Descripción</label>
+        <textarea id="textareaDescripcion" rows="6" placeholder="Cuéntanos sobre tu experiencia, enfoque y servicios..." maxlength="1000"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button id="saveDescripcion" class="btn"><i class="fas fa-save"></i> Guardar</button>
+        <button data-close="modalDescripcion" class="btn"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <script>
-    console.log('Dashboard avanzado cargado correctamente.');
+    // Config & init (produc) – mismas credenciales públicas del proyecto
     const firebaseConfig = {
       apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
       authDomain: "autra-digital.firebaseapp.com",
@@ -108,20 +235,128 @@
       appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
       measurementId: "G-MEVPRYBQC1"
     };
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    function logout() {
-      console.log('Intentando cerrar sesión.');
-      auth.signOut()
-        .then(() => {
-          console.log('Sesión cerrada con éxito.');
-          window.location.href = './index.html';
-        })
-        .catch((error) => {
-          console.error('Error al cerrar sesión:', error.message);
-          alert('Error al cerrar sesión: ' + error.message);
-        });
+    // Guard + rol permitido (Terapeuta/Admin/Formador→Admin), si no → inicio
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) { window.location.href = './login.html'; return; }
+      try {
+        let role = null;
+        const cache = sessionStorage.getItem('autra_user');
+        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
+        if (!role) {
+          const snap = await db.collection('users').doc(user.uid).get();
+          role = snap.exists ? (snap.data().role || null) : null;
+          if (role === 'Formador') role = 'Admin';
+          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
+        }
+        if (!(role === 'Terapeuta' || role === 'Admin')) {
+          window.location.href = './inicio.html';
+          return;
+        }
+        // Cargar perfil
+        loadProfile(user.uid);
+      } catch (e) {
+        console.error('Error de guard:', e);
+        window.location.href = './inicio.html';
+      }
+    });
+
+    // Elementos
+    const fotoPerfilEl = document.getElementById('fotoPerfil');
+    const nombreEl = document.getElementById('nombreUsuario');
+    const especialidadText = document.getElementById('especialidadText');
+    const tonoEl = document.getElementById('tonoPersonalidad');
+    const descEl = document.getElementById('descPersonalidad');
+
+    const btnSalir = document.getElementById('btnSalir');
+    btnSalir.addEventListener('click', async (e) => { e.preventDefault(); try { await auth.signOut(); } finally { window.location.href = './index.html'; } });
+
+    async function loadProfile(uid){
+      try{
+        const snap = await db.collection('users').doc(uid).get();
+        const data = snap.exists ? snap.data() : {};
+        nombreEl.textContent = data.nombre || '—';
+        especialidadText.textContent = data.specialty || '—';
+        tonoEl.textContent = data.personalityTone || '—';
+        descEl.textContent = data.personalityDesc || data.description || '—';
+        if (data.photoURL) fotoPerfilEl.src = data.photoURL;
+      }catch(err){ console.error('loadProfile', err); }
+    }
+
+    // ===== Cambiar foto =====
+    const btnCambiarFoto = document.getElementById('btnCambiarFoto');
+    const hiddenFile = document.createElement('input');
+    hiddenFile.type = 'file'; hiddenFile.accept = 'image/*'; hiddenFile.style.display = 'none';
+    document.body.appendChild(hiddenFile);
+
+    btnCambiarFoto.addEventListener('click', () => hiddenFile.click());
+    hiddenFile.addEventListener('change', async () => {
+      const file = hiddenFile.files[0]; if (!file) return;
+      const user = auth.currentUser; if (!user) return;
+      try{
+        // (opcional) Validaciones rápidas
+        if (file.size > 2 * 1024 * 1024) { alert('Imagen > 2MB'); return; }
+        const ref = storage.ref().child(`users/${user.uid}/avatar.jpg`);
+        await ref.put(file);
+        const url = await ref.getDownloadURL();
+        await db.collection('users').doc(user.uid).set({ photoURL: url }, { merge: true });
+        fotoPerfilEl.src = url;
+        alert('Foto actualizada');
+      }catch(err){ console.error('upload avatar', err); alert('Error subiendo la imagen'); }
+      finally{ hiddenFile.value=''; }
+    });
+
+    // ===== Editar especialidad =====
+    const modalEspecialidad = document.getElementById('modalEspecialidad');
+    document.getElementById('btnEditarEspecialidad').addEventListener('click', ()=> openModal('modalEspecialidad'));
+    document.getElementById('saveEspecialidad').addEventListener('click', async ()=>{
+      const user = auth.currentUser; if (!user) return;
+      const value = document.getElementById('inputEspecialidad').value.trim();
+      if (value.length < 3) { alert('Introduce una especialidad válida'); return; }
+      try{ await db.collection('users').doc(user.uid).set({ specialty: value }, { merge:true }); especialidadText.textContent = value; closeModal('modalEspecialidad'); }
+      catch(err){ console.error('save specialty', err); alert('Error guardando'); }
+    });
+
+    // ===== Editar personalidad =====
+    const modalPersonalidad = document.getElementById('modalPersonalidad');
+    document.getElementById('btnEditarPersonalidad').addEventListener('click', ()=> openModal('modalPersonalidad'));
+    document.getElementById('savePersonalidad').addEventListener('click', async ()=>{
+      const user = auth.currentUser; if (!user) return;
+      const tone = document.getElementById('selectTono').value;
+      const desc = document.getElementById('textareaPersonalidad').value.trim();
+      try{ await db.collection('users').doc(user.uid).set({ personalityTone: tone, personalityDesc: desc }, { merge:true }); tonoEl.textContent = tone; descEl.textContent = desc || '—'; closeModal('modalPersonalidad'); }
+      catch(err){ console.error('save personality', err); alert('Error guardando'); }
+    });
+
+    // ===== Editar descripción (bio extendida) =====
+    const modalDescripcion = document.getElementById('modalDescripcion');
+    document.getElementById('btnEditarDescripcion').addEventListener('click', ()=> openModal('modalDescripcion'));
+    document.getElementById('saveDescripcion').addEventListener('click', async ()=>{
+      const user = auth.currentUser; if (!user) return;
+      const desc = document.getElementById('textareaDescripcion').value.trim();
+      try{ await db.collection('users').doc(user.uid).set({ description: desc }, { merge:true }); descEl.textContent = desc || '—'; closeModal('modalDescripcion'); }
+      catch(err){ console.error('save description', err); alert('Error guardando'); }
+    });
+
+    // Utilidades modales
+    function openModal(id){ document.getElementById(id).classList.add('open'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+    document.querySelectorAll('[data-close]').forEach(btn=> btn.addEventListener('click', (e)=> closeModal(e.currentTarget.getAttribute('data-close'))));
+
+    // Feature flags: solo estos activos
+    const FEATURES = { profilePhoto:true, personality:true, description:true, specialty:true, patients:false, reviews:false };
+    applyFeatureFlags();
+
+    function applyFeatureFlags(){
+      document.querySelectorAll('[data-feature]').forEach(el=>{
+        const key = el.getAttribute('data-feature');
+        const on = !!FEATURES[key];
+        if (!on) el.classList.add('is-disabled'); else el.classList.remove('is-disabled');
+      });
     }
   </script>
 </body>
