@@ -14,8 +14,8 @@
       --bg2: #F9EEE0;
       --glass-bg: rgba(255, 255, 255, 0.15);
       --glass-stroke: rgba(255, 255, 255, 0.25);
-      --text-important: #545454; /* títulos, labels fuertes */
-      --text-normal: #737373;     /* texto general */
+      --text-important: #545454; /* textos importantes */
+      --text-normal: #737373;    /* textos */
       --accent: #ABC8E9;
       --shadow: rgba(0, 0, 0, 0.25);
       --radius: 24px;
@@ -23,7 +23,7 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; }
-    /* Habilitar solo scroll externo en esta página */
+    /* Scroll externo únicamente en esta página */
     html, body { height: auto; }
 
     body {
@@ -59,7 +59,7 @@
       backdrop-filter: blur(18px) saturate(120%);
       -webkit-backdrop-filter: blur(18px) saturate(120%);
       border: 1px solid var(--glass-stroke);
-      /* Importante: sin overflow interno ni max-height */
+      /* sin overflow interno ni max-height */
     }
 
     header { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
@@ -175,8 +175,8 @@
         <div class="field">
           <i class="fas fa-user-tag" aria-hidden="true"></i>
           <select id="role" required>
+            <!-- Admin/Formador no aparece en UI pública -->
             <option value="Terapeuta">Terapeuta</option>
-            <option value="Formador">Formador</option>
             <option value="Paciente">Paciente</option>
           </select>
         </div>
