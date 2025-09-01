@@ -44,7 +44,7 @@
     .tab{appearance:none; border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px; font:600 14px/1 'Montserrat', sans-serif; color:var(--text-strong);
       background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
     .tab[aria-current="page"]{box-shadow:var(--focus)}
-    .tab:focus-visible{outline:none; box-shadow:var(--focus)}
+    $1    .tab[aria-disabled="true"]{opacity:.6; pointer-events:none}
 
     /* ===== Layout ===== */
     .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
@@ -202,32 +202,46 @@
     const btnSalir = document.getElementById('btnSalir');
 
     // Guard + resolución de rol para el botón "Perfil"
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.href = './login.html';
-        return;
-      }
-      try {
-        // Cache ligera en sessionStorage
-        const cache = sessionStorage.getItem('autra_user');
-        let role = null;
-        if (cache) {
-          try { role = JSON.parse(cache).role || null; } catch(_) {}
-        }
-        if (!role) {
-          const snap = await db.collection('users').doc(user.uid).get();
-          role = snap.exists ? snap.data().role : null;
-          if (role === 'Formador') role = 'Admin'; // compat legacy
-          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
-        }
-        // Destino dinámico del perfil
-        if (role === 'Paciente') perfilLink.href = './dashboard_basico.html';
-        else perfilLink.href = './dashboard_avanzado.html'; // Terapeuta/Admin por defecto
-      } catch (err) {
-        console.error('Error resolviendo rol:', err);
-        perfilLink.href = './dashboard_basico.html';
-      }
-    });
+// Deshabilitamos temporalmente el enlace hasta resolver rol
+perfilLink.setAttribute('aria-disabled','true');
+perfilLink.addEventListener('click', (e) => {
+  if (perfilLink.getAttribute('aria-disabled') === 'true' || perfilLink.getAttribute('href') === '#') {
+    e.preventDefault();
+  }
+});
+
+auth.onAuthStateChanged(async (user) => {
+  if (!user) {
+    window.location.href = './login.html';
+    return;
+  }
+  try {
+    // Cache ligera en sessionStorage
+    const cache = sessionStorage.getItem('autra_user');
+    let role = null;
+    if (cache) {
+      try { role = JSON.parse(cache).role || null; } catch(_) {}
+    }
+    if (!role) {
+      const snap = await db.collection('users').doc(user.uid).get();
+      role = snap.exists ? (snap.data().role || null) : null;
+      if (role === 'Formador') role = 'Admin'; // compat legacy
+      sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
+    }
+
+    // Destino dinámico del perfil (soporta ambos roles)
+    let dest = './dashboard_basico.html'; // por defecto, paciente
+    if (role === 'Terapeuta' || role === 'Admin') dest = './dashboard_avanzado.html';
+    else if (role === 'Paciente') dest = './dashboard_basico.html';
+
+    perfilLink.href = dest;
+    perfilLink.removeAttribute('aria-disabled');
+  } catch (err) {
+    console.error('Error resolviendo rol:', err);
+    perfilLink.href = './dashboard_basico.html';
+    perfilLink.removeAttribute('aria-disabled');
+  }
+});
 
     btnSalir.addEventListener('click', async (e) => {
       e.preventDefault();
