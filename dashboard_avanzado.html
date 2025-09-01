@@ -75,14 +75,15 @@
     .is-disabled .block-overlay{position:absolute; inset:0; background:var(--overlay); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); border-radius:inherit; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px}
     .overlay-badge{font:700 .95rem 'Montserrat', sans-serif; color:#333; display:inline-flex; align-items:center; gap:10px}
 
-    /* Modales simples */
+    /* Modales */
     .modal{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:50}
     .modal.open{display:flex}
-    .modal-card{width:min(92vw, 480px); border-radius:16px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78)); box-shadow:var(--shadow); padding:16px}
+    .modal-card{width:min(92vw, 560px); border-radius:16px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78)); box-shadow:var(--shadow); padding:16px; position:relative}
     .modal-card h3{margin:0 0 10px; font:700 1.05rem 'Montserrat', sans-serif; color:var(--text-strong)}
+    .modal-close{position:absolute; top:10px; right:12px; background:transparent; border:none; font:700 1.25rem 'Montserrat', sans-serif; cursor:pointer; color:var(--text-strong)}
     .field{margin:10px 0}
     .field label{display:block; font:600 .9rem 'Montserrat', sans-serif; color:var(--text-strong); margin-bottom:6px}
-    .field input[type="text"], .field textarea, .field select{width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke); background:#fff; font:.95rem 'Lato', sans-serif; color:var(--text-strong)}
+    .field input[type="text"], .field textarea, .field select, .field input[type="file"]{width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke); background:#fff; font:.95rem 'Lato', sans-serif; color:var(--text-strong)}
     .modal-actions{display:flex; gap:8px; justify-content:flex-end; margin-top:12px}
 
     @media (max-width: 768px){
@@ -142,10 +143,7 @@
         <p id="descPersonalidad" class="descripcion">—</p>
 
         <div class="actions">
-          <button id="btnCambiarFoto" class="btn"><i class="fas fa-camera"></i> Cambiar foto</button>
-          <button id="btnEditarEspecialidad" class="btn"><i class="fas fa-user-tag"></i> Editar especialidad</button>
-          <button id="btnEditarPersonalidad" class="btn"><i class="fas fa-user-edit"></i> Editar personalidad</button>
-          <button id="btnEditarDescripcion" class="btn"><i class="fas fa-align-left"></i> Editar descripción</button>
+          <button id="btnEditarPerfil" class="btn"><i class="fas fa-user-cog"></i> Editar perfil</button>
         </div>
 
         <!-- Bloques de reseñas/comentarios (en obras) -->
@@ -168,24 +166,19 @@
     © 2025 Autra Digital
   </footer>
 
-  <!-- Modales -->
-  <div id="modalEspecialidad" class="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalEspecialidadTitle">
-      <h3 id="modalEspecialidadTitle">Editar especialidad</h3>
+  <!-- Modal unificado: Editar perfil -->
+  <div id="modalPerfil" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalPerfilTitle">
+      <button class="modal-close" aria-label="Cerrar" data-close="modalPerfil">×</button>
+      <h3 id="modalPerfilTitle">Editar perfil</h3>
+      <div class="field">
+        <label for="inputFoto">Foto de perfil (opcional)</label>
+        <input id="inputFoto" type="file" accept="image/*" />
+      </div>
       <div class="field">
         <label for="inputEspecialidad">Especialidad</label>
         <input id="inputEspecialidad" type="text" placeholder="Ej. Terapia Cognitivo-Conductual" maxlength="60" />
       </div>
-      <div class="modal-actions">
-        <button id="saveEspecialidad" class="btn"><i class="fas fa-save"></i> Guardar</button>
-        <button data-close="modalEspecialidad" class="btn"><i class="fas fa-times"></i> Cerrar</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="modalPersonalidad" class="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalPersonalidadTitle">
-      <h3 id="modalPersonalidadTitle">Editar personalidad</h3>
       <div class="field">
         <label for="selectTono">Tono</label>
         <select id="selectTono">
@@ -195,26 +188,16 @@
         </select>
       </div>
       <div class="field">
-        <label for="textareaPersonalidad">Descripción breve</label>
+        <label for="textareaPersonalidad">Descripción de personalidad</label>
         <textarea id="textareaPersonalidad" rows="5" placeholder="Describe tu estilo de trabajo..." maxlength="800"></textarea>
       </div>
-      <div class="modal-actions">
-        <button id="savePersonalidad" class="btn"><i class="fas fa-save"></i> Guardar</button>
-        <button data-close="modalPersonalidad" class="btn"><i class="fas fa-times"></i> Cerrar</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="modalDescripcion" class="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalDescripcionTitle">
-      <h3 id="modalDescripcionTitle">Editar descripción</h3>
       <div class="field">
-        <label for="textareaDescripcion">Descripción</label>
+        <label for="textareaDescripcion">Descripción (bio)</label>
         <textarea id="textareaDescripcion" rows="6" placeholder="Cuéntanos sobre tu experiencia, enfoque y servicios..." maxlength="1000"></textarea>
       </div>
       <div class="modal-actions">
-        <button id="saveDescripcion" class="btn"><i class="fas fa-save"></i> Guardar</button>
-        <button data-close="modalDescripcion" class="btn"><i class="fas fa-times"></i> Cerrar</button>
+        <button id="savePerfil" class="btn"><i class="fas fa-save"></i> Guardar</button>
+        <button class="btn" data-close="modalPerfil"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
   </div>
@@ -225,7 +208,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <script>
-    // Config & init (produc) – mismas credenciales públicas del proyecto
+    // Config & init (mismas credenciales públicas)
     const firebaseConfig = {
       apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
       authDomain: "autra-digital.firebaseapp.com",
@@ -265,7 +248,7 @@
       }
     });
 
-    // Elementos
+    // Elementos UI
     const fotoPerfilEl = document.getElementById('fotoPerfil');
     const nombreEl = document.getElementById('nombreUsuario');
     const especialidadText = document.getElementById('especialidadText');
@@ -275,82 +258,92 @@
     const btnSalir = document.getElementById('btnSalir');
     btnSalir.addEventListener('click', async (e) => { e.preventDefault(); try { await auth.signOut(); } finally { window.location.href = './index.html'; } });
 
+    let profileData = { specialty:null, personalityTone:null, personalityDesc:null, description:null, photoURL:null, nombre:null };
+
     async function loadProfile(uid){
       try{
         const snap = await db.collection('users').doc(uid).get();
         const data = snap.exists ? snap.data() : {};
-        nombreEl.textContent = data.nombre || '—';
-        especialidadText.textContent = data.specialty || '—';
-        tonoEl.textContent = data.personalityTone || '—';
-        descEl.textContent = data.personalityDesc || data.description || '—';
-        if (data.photoURL) fotoPerfilEl.src = data.photoURL;
+        profileData = {
+          specialty: data.specialty || null,
+          personalityTone: data.personalityTone || null,
+          personalityDesc: data.personalityDesc || null,
+          description: data.description || data.personalityDesc || null,
+          photoURL: data.photoURL || null,
+          nombre: data.nombre || null,
+        };
+        nombreEl.textContent = profileData.nombre || '—';
+        especialidadText.textContent = profileData.specialty || '—';
+        tonoEl.textContent = profileData.personalityTone || '—';
+        descEl.textContent = profileData.description || '—';
+        if (profileData.photoURL) fotoPerfilEl.src = profileData.photoURL;
       }catch(err){ console.error('loadProfile', err); }
     }
 
-    // ===== Cambiar foto =====
-    const btnCambiarFoto = document.getElementById('btnCambiarFoto');
-    const hiddenFile = document.createElement('input');
-    hiddenFile.type = 'file'; hiddenFile.accept = 'image/*'; hiddenFile.style.display = 'none';
-    document.body.appendChild(hiddenFile);
-
-    btnCambiarFoto.addEventListener('click', () => hiddenFile.click());
-    hiddenFile.addEventListener('change', async () => {
-      const file = hiddenFile.files[0]; if (!file) return;
-      const user = auth.currentUser; if (!user) return;
-      try{
-        // (opcional) Validaciones rápidas
-        if (file.size > 2 * 1024 * 1024) { alert('Imagen > 2MB'); return; }
-        const ref = storage.ref().child(`users/${user.uid}/avatar.jpg`);
-        await ref.put(file);
-        const url = await ref.getDownloadURL();
-        await db.collection('users').doc(user.uid).set({ photoURL: url }, { merge: true });
-        fotoPerfilEl.src = url;
-        alert('Foto actualizada');
-      }catch(err){ console.error('upload avatar', err); alert('Error subiendo la imagen'); }
-      finally{ hiddenFile.value=''; }
+    // ===== Modal Editar Perfil =====
+    const modalPerfil = document.getElementById('modalPerfil');
+    document.getElementById('btnEditarPerfil').addEventListener('click', ()=>{
+      // Prefill
+      document.getElementById('inputEspecialidad').value = profileData.specialty || '';
+      document.getElementById('selectTono').value = profileData.personalityTone || 'Empático';
+      document.getElementById('textareaPersonalidad').value = profileData.personalityDesc || '';
+      document.getElementById('textareaDescripcion').value = (profileData.description && profileData.description !== profileData.personalityDesc) ? profileData.description : '';
+      openModal('modalPerfil');
     });
 
-    // ===== Editar especialidad =====
-    const modalEspecialidad = document.getElementById('modalEspecialidad');
-    document.getElementById('btnEditarEspecialidad').addEventListener('click', ()=> openModal('modalEspecialidad'));
-    document.getElementById('saveEspecialidad').addEventListener('click', async ()=>{
-      const user = auth.currentUser; if (!user) return;
-      const value = document.getElementById('inputEspecialidad').value.trim();
-      if (value.length < 3) { alert('Introduce una especialidad válida'); return; }
-      try{ await db.collection('users').doc(user.uid).set({ specialty: value }, { merge:true }); especialidadText.textContent = value; closeModal('modalEspecialidad'); }
-      catch(err){ console.error('save specialty', err); alert('Error guardando'); }
-    });
+    document.querySelectorAll('[data-close]').forEach(btn=> btn.addEventListener('click', (e)=> closeModal(e.currentTarget.getAttribute('data-close'))));
 
-    // ===== Editar personalidad =====
-    const modalPersonalidad = document.getElementById('modalPersonalidad');
-    document.getElementById('btnEditarPersonalidad').addEventListener('click', ()=> openModal('modalPersonalidad'));
-    document.getElementById('savePersonalidad').addEventListener('click', async ()=>{
+    document.getElementById('savePerfil').addEventListener('click', async ()=>{
       const user = auth.currentUser; if (!user) return;
+      const esp = document.getElementById('inputEspecialidad').value.trim();
       const tone = document.getElementById('selectTono').value;
-      const desc = document.getElementById('textareaPersonalidad').value.trim();
-      try{ await db.collection('users').doc(user.uid).set({ personalityTone: tone, personalityDesc: desc }, { merge:true }); tonoEl.textContent = tone; descEl.textContent = desc || '—'; closeModal('modalPersonalidad'); }
-      catch(err){ console.error('save personality', err); alert('Error guardando'); }
-    });
-
-    // ===== Editar descripción (bio extendida) =====
-    const modalDescripcion = document.getElementById('modalDescripcion');
-    document.getElementById('btnEditarDescripcion').addEventListener('click', ()=> openModal('modalDescripcion'));
-    document.getElementById('saveDescripcion').addEventListener('click', async ()=>{
-      const user = auth.currentUser; if (!user) return;
+      const perso = document.getElementById('textareaPersonalidad').value.trim();
       const desc = document.getElementById('textareaDescripcion').value.trim();
-      try{ await db.collection('users').doc(user.uid).set({ description: desc }, { merge:true }); descEl.textContent = desc || '—'; closeModal('modalDescripcion'); }
-      catch(err){ console.error('save description', err); alert('Error guardando'); }
+      const file = document.getElementById('inputFoto').files[0];
+
+      const updates = {};
+      if (esp && esp !== profileData.specialty) updates.specialty = esp;
+      if (tone && tone !== profileData.personalityTone) updates.personalityTone = tone;
+      if (perso !== profileData.personalityDesc) updates.personalityDesc = perso;
+      if (desc !== profileData.description) updates.description = desc;
+
+      try{
+        // Subida de foto si la hay
+        if (file) {
+          if (file.size > 2 * 1024 * 1024) { alert('Imagen > 2MB'); return; }
+          const ref = storage.ref().child(`users/${user.uid}/avatar.jpg`);
+          await ref.put(file);
+          const url = await ref.getDownloadURL();
+          updates.photoURL = url;
+        }
+        if (Object.keys(updates).length > 0) {
+          await db.collection('users').doc(user.uid).set(updates, { merge:true });
+          // Refrescar UI + cache local
+          profileData = { ...profileData, ...updates };
+          especialidadText.textContent = profileData.specialty || '—';
+          tonoEl.textContent = profileData.personalityTone || '—';
+          descEl.textContent = profileData.description || profileData.personalityDesc || '—';
+          if (profileData.photoURL) fotoPerfilEl.src = profileData.photoURL;
+        }
+        closeModal('modalPerfil');
+        alert('Perfil actualizado');
+      }catch(err){ console.error('save profile', err); alert('Error guardando cambios'); }
     });
 
     // Utilidades modales
     function openModal(id){ document.getElementById(id).classList.add('open'); }
-    function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-    document.querySelectorAll('[data-close]').forEach(btn=> btn.addEventListener('click', (e)=> closeModal(e.currentTarget.getAttribute('data-close'))));
+    function closeModal(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('open');
+      // limpiar input de foto para evitar re-subidas accidentales
+      const fileInput = document.getElementById('inputFoto');
+      if (fileInput) fileInput.value = '';
+    }
 
-    // Feature flags: solo estos activos
-    const FEATURES = { profilePhoto:true, personality:true, description:true, specialty:true, patients:false, reviews:false };
+    // Feature flags: activos vs en obras
+    const FEATURES = { profile:true, patients:false, reviews:false };
     applyFeatureFlags();
-
     function applyFeatureFlags(){
       document.querySelectorAll('[data-feature]').forEach(el=>{
         const key = el.getAttribute('data-feature');
