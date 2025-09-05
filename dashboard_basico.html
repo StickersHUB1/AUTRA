@@ -99,25 +99,39 @@
     </div>
   </header>
 
-  <main class="wrap" role="main">
-    <section class="layout">
-      <!-- Panel izquierdo: Próximas sesiones (en obras) -->
-      <div class="left-panel is-disabled" data-feature="sessions">
-        <div class="block-overlay" role="status" aria-live="polite">
-          <div class="overlay-badge">🚧 En obras · Próximas sesiones 🛠️</div>
-        </div>
-        <h3 class="card-title">Próximas sesiones</h3>
-        <div class="list" id="lista-sesiones"><!-- vacío --></div>
-      </div>
+      <!-- Panel derecho: Perfil paciente -->
+<div class="perfil-paciente">
+  <h2 class="perfil-titulo">PERFIL PACIENTE</h2>
 
-      <!-- Panel derecho: Perfil paciente (disponible) -->
-      <div class="right-panel">
-        <img id="fotoPerfil" class="foto-perfil" alt="Foto de perfil" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><circle cx='60' cy='60' r='60' fill='%23f2f2f2'/><circle cx='60' cy='46' r='22' fill='%23d9d9d9'/><path d='M20 108c8-24 36-32 40-32s34 8 40 32' fill='%23d9d9d9'/></svg>">
-        <h2 id="nombreUsuario" class="nombre">—</h2>
-        <p id="descUsuario" class="descripcion">—</p>
-        <div class="actions">
-          <button id="btnEditarPerfil" class="btn"><i class="fas fa-user-cog"></i> Editar perfil</button>
-        </div>
+  <div class="perfil-info">
+    <div class="perfil-foto">
+      <img id="fotoPerfil" alt="Foto de perfil" src="data:image/svg+xml;utf8,
+      <svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'>
+        <circle cx='60' cy='60' r='60' fill='%23f2f2f2'/>
+        <circle cx='60' cy='46' r='22' fill='%23d9d9d9'/>
+        <path d='M20 108c8-24 36-32 40-32s34 8 40 32' fill='%23d9d9d9'/>
+      </svg>">
+    </div>
+    <div class="perfil-datos">
+      <p><strong>Nombre:</strong> <span id="nombreUsuario">—</span></p>
+      <p><strong>Fecha de nacimiento:</strong> <span id="fechaNacimiento">—</span></p>
+      <p><strong>Ciudad/Provincia:</strong> <span id="ciudadUsuario">—</span></p>
+      <p><strong>Código paciente:</strong> <span id="codigoPaciente">A001</span></p>
+    </div>
+  </div>
+
+  <div class="perfil-descripcion">
+    <h3>DESCRIPCIÓN</h3>
+    <p id="descUsuario">—</p>
+  </div>
+
+  <div class="perfil-acciones">
+    <button id="btnEditarPerfil" class="btn">
+      <i class="fas fa-user-cog"></i> Editar perfil
+    </button>
+  </div>
+</div>
+
 
         <!-- Mensajes con terapeuta (en obras) -->
         <div class="is-disabled" data-feature="messaging" style="margin-top:16px; width:100%">
