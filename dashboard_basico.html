@@ -76,6 +76,73 @@
       .left-panel{min-width:100%}
       .right-panel{min-width:100%}
     }
+
+.perfil-paciente {
+  width: 100%;
+  background: var(--glass);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.perfil-titulo {
+  font: 700 1.4rem 'Montserrat', sans-serif;
+  text-align: center;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.perfil-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.perfil-foto img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid var(--glass-stroke);
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.perfil-datos p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  color: var(--text-strong);
+}
+
+.perfil-descripcion {
+  border: 1px solid var(--glass-stroke);
+  border-radius: 12px;
+  background: #fff9;
+  padding: 12px;
+  min-height: 120px;
+}
+
+.perfil-descripcion h3 {
+  font: 600 1rem 'Montserrat', sans-serif;
+  margin: 0 0 8px;
+  color: var(--text-strong);
+}
+
+.perfil-descripcion p {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin: 0;
+}
+
+.perfil-acciones {
+  display: flex;
+  justify-content: flex-end;
+}
+
   </style>
 </head>
 <body>
