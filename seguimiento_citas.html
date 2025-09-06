@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguimiento de citas | Autra Digital</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg1:#ABC8E9; --bg2:#F9EEE0;
+      --text-strong:#545454; --text:#737373;
+      --accent:#ABC8E9; --glass-stroke:rgba(171,200,233,.35);
+      --glass:#ffffffb3; --glass-soft:#ffffffa6;
+      --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
+      --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
+      --overlay: rgba(245, 245, 245, .75);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:auto}
+    body{
+      margin:0; font-family:'Lato', Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 85% -10%, rgba(171,200,233,.35), transparent 60%),
+        radial-gradient(900px 700px at -10% 100%, rgba(171,200,233,.25), transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    }
+    .orb{position:fixed; filter:blur(40px); opacity:.7; pointer-events:none}
+    .orb.one{width:420px;height:420px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); top:-120px; right:-80px}
+    .orb.two{width:520px;height:520px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); bottom:-140px; left:-120px}
+
+    .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%); -webkit-backdrop-filter:blur(14px) saturate(120%);
+      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4)); border-bottom:1px solid var(--glass-stroke);
+      box-shadow:0 8px 30px rgba(0,0,0,.06)}
+    .topbar .container{max-width:1100px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:16px; justify-content:space-between}
+    .brand{display:flex; align-items:center; gap:12px}
+    .brand img{width:36px; height:36px; object-fit:contain}
+    .brand h1{font:700 18px/1.1 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
+    nav ul{display:flex; list-style:none; gap:8px; margin:0; padding:0}
+    .tab{appearance:none; border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px; font:600 14px/1 'Montserrat', sans-serif; color:var(--text-strong);
+      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+    .tab[aria-current="page"]{box-shadow:var(--focus)}
+    .tab:focus-visible{outline:none; box-shadow:var(--focus)}
+
+    .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
+    .panel{backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
+      background:var(--glass); border:1px solid var(--glass-stroke); border-radius:16px; box-shadow:var(--shadow); padding:16px}
+
+    .page-title{font:700 1.35rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0 0 14px; display:flex; align-items:center; gap:10px}
+    .actions{display:flex; gap:8px; flex-wrap:wrap}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
+    .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
+    .table{width:100%; border-collapse:separate; border-spacing:0 10px; margin-top:12px}
+    .table th{font:700 .9rem 'Montserrat', sans-serif; color:var(--text-strong); text-align:left; padding:8px 10px}
+    .row{background:linear-gradient(180deg,#fff,rgba(255,255,255,.85)); border:1px solid var(--glass-stroke); border-radius:12px}
+    .row td{padding:10px}
+    .empty{border:1px dashed var(--glass-stroke); border-radius:12px; padding:18px; text-align:center; color:var(--text)}
+  </style>
+</head>
+<body>
+  <div class="orb one" aria-hidden="true"></div>
+  <div class="orb two" aria-hidden="true"></div>
+
+  <!-- Topbar -->
+  <header class="topbar" role="banner">
+    <div class="container">
+      <a class="brand" href="./inicio.html" aria-label="Autra Digital">
+        <img src="logotipo.png" alt="Autra Digital Logo" />
+        <h1>Autra Digital</h1>
+      </a>
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a class="tab" href="./inicio.html"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a class="tab" href="./dashboard_basico.html"><i class="fas fa-user"></i> Perfil</a></li>
+          <li><a class="tab" aria-current="page" href="./seguimiento_citas.html"><i class="fas fa-calendar-check"></i> Seguimiento de citas</a></li>
+          <li><a id="btnSalir" class="tab" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <h2 class="page-title"><i class="fas fa-calendar-check"></i> SEGUIMIENTO DE CITAS</h2>
+
+      <div class="actions">
+        <button id="btnNuevaCita" class="btn"><i class="fas fa-plus"></i> Nueva cita</button>
+        <button id="btnRefrescar" class="btn"><i class="fas fa-rotate"></i> Refrescar</button>
+      </div>
+
+      <!-- Empty state (se llena luego desde Firestore) -->
+      <div id="emptyState" class="empty" role="status" aria-live="polite">
+        Aún no hay citas registradas. Crea una nueva o sincroniza con tu terapeuta.
+      </div>
+
+      <!-- Tabla (se muestra cuando haya datos) -->
+      <table id="tablaCitas" class="table" style="display:none">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Profesional</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyCitas">
+          <!-- filas dinámicas -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer style="margin:24px auto; text-align:center; color:var(--text); font:.9rem 'Lato', sans-serif; opacity:.8">
+    © 2025 Autra Digital
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // Config compartida (igual que otras páginas)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+      authDomain: "autra-digital.firebaseapp.com",
+      projectId: "autra-digital",
+      storageBucket: "autra-digital.firebasestorage.app",
+      messagingSenderId: "149401206632",
+      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
+      measurementId: "G-MEVPRYBQC1"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Guard de rol (igual que en tu página de perfil)
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) { window.location.href = './login.html'; return; }
+      try {
+        let role = null;
+        const cache = sessionStorage.getItem('autra_user');
+        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
+        if (!role) {
+          const snap = await db.collection('users').doc(user.uid).get();
+          role = snap.exists ? (snap.data().role || null) : null;
+          if (role === 'Formador') role = 'Admin';
+          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
+        }
+        if (role !== 'Paciente') {
+          window.location.href = (role === 'Terapeuta' || role === 'Admin') ? './dashboard_avanzado.html' : './inicio.html';
+        } else {
+          loadCitas(user.uid);
+        }
+      } catch (e) {
+        console.error('Error de guard:', e);
+        window.location.href = './inicio.html';
+      }
+    });
+
+    // Cerrar sesión
+    document.getElementById('btnSalir')?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await auth.signOut(); } finally { window.location.href = './index.html'; }
+    });
+
+    // Hooks básicos (sin escritura aún)
+    document.getElementById('btnRefrescar')?.addEventListener('click', () => {
+      const uid = auth.currentUser?.uid;
+      if (uid) loadCitas(uid);
+    });
+
+    document.getElementById('btnNuevaCita')?.addEventListener('click', () => {
+      alert('Próximamente: crear cita. (Podemos conectar un modal y una colección `appointments`)');
+    });
+
+    async function loadCitas(uid){
+      try{
+        // Estructura propuesta: /users/{uid}/appointments
+        const snap = await db.collection('users').doc(uid).collection('appointments')
+          .orderBy('date', 'desc').limit(50).get();
+
+        const tbody = document.getElementById('tbodyCitas');
+        const table = document.getElementById('tablaCitas');
+        const empty = document.getElementById('emptyState');
+        tbody.innerHTML = '';
+
+        if (snap.empty) {
+          table.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+        }
+
+        snap.forEach(doc=>{
+          const ap = doc.data();
+          const tr = document.createElement('tr');
+          tr.className = 'row';
+          tr.innerHTML = `
+            <td>${fmtDate(ap.date)}</td>
+            <td>${ap.time || '—'}</td>
+            <td>${ap.professional || '—'}</td>
+            <td>${badge(ap.status || 'pendiente')}</td>
+            <td>
+              <button class="btn" data-id="${doc.id}" disabled>
+                <i class="fas fa-eye"></i> Ver
+              </button>
+            </td>`;
+          tbody.appendChild(tr);
+        });
+
+        empty.style.display = 'none';
+        table.style.display = 'table';
+      }catch(err){
+        console.error('loadCitas', err);
+        alert('No se pudieron cargar las citas');
+      }
+    }
+
+    function fmtDate(ts){
+      // Admite Timestamp de Firestore o ISO string
+      let d;
+      if (ts && typeof ts.toDate === 'function') d = ts.toDate();
+      else d = ts ? new Date(ts) : null;
+      if (!d || isNaN(d)) return '—';
+      return d.toLocaleDateString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit' });
+    }
+
+    function badge(status){
+      const label = String(status).toLowerCase();
+      const map = { pendiente:'Pendiente', confirmada:'Confirmada', realizada:'Realizada', cancelada:'Cancelada' };
+      return `<span style="font:600 .85rem 'Montserrat', sans-serif; padding:6px 10px; border-radius:999px; border:1px solid var(--glass-stroke); background:#fff">${map[label] || status}</span>`;
+    }
+  </script>
+</body>
+</html>
