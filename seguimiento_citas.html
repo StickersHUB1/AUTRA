@@ -15,7 +15,6 @@
       --glass:#ffffffb3; --glass-soft:#ffffffa6;
       --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
       --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
-      --overlay: rgba(245, 245, 245, .75);
     }
     *,*::before,*::after{box-sizing:border-box}
     html,body{height:auto}
@@ -48,16 +47,27 @@
     .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
     .panel{backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
       background:var(--glass); border:1px solid var(--glass-stroke); border-radius:16px; box-shadow:var(--shadow); padding:16px}
-
     .page-title{font:700 1.35rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0 0 14px; display:flex; align-items:center; gap:10px}
     .actions{display:flex; gap:8px; flex-wrap:wrap}
     .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke);
       background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
     .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
-    .table{width:100%; border-collapse:separate; border-spacing:0 10px; margin-top:12px}
-    .table th{font:700 .9rem 'Montserrat', sans-serif; color:var(--text-strong); text-align:left; padding:8px 10px}
-    .row{background:linear-gradient(180deg,#fff,rgba(255,255,255,.85)); border:1px solid var(--glass-stroke); border-radius:12px}
-    .row td{padding:10px}
+
+    /* ===== Card de cita + tracker ===== */
+    .cita{border:1px solid var(--glass-stroke); border-radius:16px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.85)); box-shadow:var(--shadow); padding:14px; margin:12px 0}
+    .cita-header{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px}
+    .cita-title{font:700 1rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
+    .cita-meta{font-size:.9rem; opacity:.85}
+
+    .tracker{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; align-items:center; margin-top:8px}
+    .step{position:relative; text-align:center; padding:8px 6px; border:1px solid var(--glass-stroke); border-radius:12px; background:#fff}
+    .step small{display:block; font:600 .78rem 'Montserrat', sans-serif; color:var(--text-strong)}
+    .step .dot{width:10px; height:10px; border-radius:50%; background:#d3d8e0; margin:6px auto 0}
+    .step.done{background:linear-gradient(180deg, #f9fffb, #e9fff2); border-color:#bfe8cc}
+    .step.done .dot{background:#41c183}
+    .step.current{box-shadow:0 0 0 3px rgba(65,193,131,.25)}
+    .legend{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; font-size:.85rem}
+
     .empty{border:1px dashed var(--glass-stroke); border-radius:12px; padding:18px; text-align:center; color:var(--text)}
   </style>
 </head>
@@ -65,7 +75,6 @@
   <div class="orb one" aria-hidden="true"></div>
   <div class="orb two" aria-hidden="true"></div>
 
-  <!-- Topbar -->
   <header class="topbar" role="banner">
     <div class="container">
       <a class="brand" href="./inicio.html" aria-label="Autra Digital">
@@ -92,26 +101,16 @@
         <button id="btnRefrescar" class="btn"><i class="fas fa-rotate"></i> Refrescar</button>
       </div>
 
-      <!-- Empty state (se llena luego desde Firestore) -->
-      <div id="emptyState" class="empty" role="status" aria-live="polite">
-        Aún no hay citas registradas. Crea una nueva o sincroniza con tu terapeuta.
+      <div id="contenedorCitas">
+        <div id="emptyState" class="empty" role="status" aria-live="polite">
+          Aún no hay citas registradas. Crea una nueva o espera confirmación de Administración.
+        </div>
       </div>
 
-      <!-- Tabla (se muestra cuando haya datos) -->
-      <table id="tablaCitas" class="table" style="display:none">
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Profesional</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyCitas">
-          <!-- filas dinámicas -->
-        </tbody>
-      </table>
+      <div class="legend" aria-hidden="true">
+        <span><i class="fas fa-circle" style="font-size:.55rem"></i> Avance por etapas</span>
+        <span>Estados: Solicitud enviada → Solicitud aceptada → Cita confirmada → Sesión agendada → Utilización confirmada</span>
+      </div>
     </section>
   </main>
 
@@ -125,7 +124,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
   <script>
-    // Config compartida (igual que otras páginas)
+    // ===== Firebase init (compartido) =====
     const firebaseConfig = {
       apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
       authDomain: "autra-digital.firebaseapp.com",
@@ -139,7 +138,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Guard de rol (igual que en tu página de perfil)
+    // ===== Guard de rol: Paciente o Terapeuta/Admin pueden ver su propio tracking =====
     auth.onAuthStateChanged(async (user) => {
       if (!user) { window.location.href = './login.html'; return; }
       try {
@@ -152,69 +151,114 @@
           if (role === 'Formador') role = 'Admin';
           sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
         }
-        if (role !== 'Paciente') {
-          window.location.href = (role === 'Terapeuta' || role === 'Admin') ? './dashboard_avanzado.html' : './inicio.html';
-        } else {
-          loadCitas(user.uid);
-        }
+        loadCitas(user.uid, role);
       } catch (e) {
-        console.error('Error de guard:', e);
+        console.error('Guard seguimiento_citas', e);
         window.location.href = './inicio.html';
       }
     });
 
-    // Cerrar sesión
     document.getElementById('btnSalir')?.addEventListener('click', async (e) => {
       e.preventDefault();
       try { await auth.signOut(); } finally { window.location.href = './index.html'; }
     });
-
-    // Hooks básicos (sin escritura aún)
     document.getElementById('btnRefrescar')?.addEventListener('click', () => {
       const uid = auth.currentUser?.uid;
-      if (uid) loadCitas(uid);
+      if (uid) {
+        const cache = sessionStorage.getItem('autra_user');
+        let role = null;
+        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
+        loadCitas(uid, role);
+      }
     });
-
     document.getElementById('btnNuevaCita')?.addEventListener('click', () => {
-      alert('Próximamente: crear cita. (Podemos conectar un modal y una colección `appointments`)');
+      alert('Próximamente: alta de solicitud. Creará una cita con estado "Solicitud enviada".');
     });
 
-    async function loadCitas(uid){
-      try{
-        // Estructura propuesta: /users/{uid}/appointments
-        const snap = await db.collection('users').doc(uid).collection('appointments')
-          .orderBy('date', 'desc').limit(50).get();
+    // ===== Modelo de estados (hilo visual tipo tracking) =====
+    const STEPS = [
+      'Solicitud enviada',
+      'Solicitud aceptada',
+      'Cita confirmada',
+      'Sesión agendada',
+      'Utilización confirmada'
+    ];
 
-        const tbody = document.getElementById('tbodyCitas');
-        const table = document.getElementById('tablaCitas');
+    // Normalización de valores que puedan venir en distinto formato
+    function normalizeStatus(s){
+      if (!s) return null;
+      const x = String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,'').trim();
+      if (x.includes('utilizacion') || x.includes('uso')) return 'Utilización confirmada';
+      if (x.includes('agendada') || x.includes('programada')) return 'Sesión agendada';
+      if (x.includes('confirmada')) return 'Cita confirmada';
+      if (x.includes('aceptada')) return 'Solicitud aceptada';
+      if (x.includes('enviada') || x.includes('solicitud')) return 'Solicitud enviada';
+      // fallback para estados legacy tipo "pendiente/realizada/cancelada"
+      if (x.includes('realizada')) return 'Utilización confirmada';
+      if (x.includes('pendiente')) return 'Solicitud enviada';
+      return s; // deja tal cual si es desconocido
+    }
+
+    function stepIndex(status){
+      const norm = normalizeStatus(status);
+      const i = STEPS.indexOf(norm);
+      return i >= 0 ? i : 0;
+    }
+
+    async function loadCitas(uid, role){
+      try{
+        const cont = document.getElementById('contenedorCitas');
         const empty = document.getElementById('emptyState');
-        tbody.innerHTML = '';
+        cont.innerHTML = '';
+        cont.appendChild(empty);
+
+        // Paciente: /users/{uid}/appointments
+        // Terapeuta/Admin (si lo amplías): podríamos listar asignadas a él/ella.
+        let q = db.collection('users').doc(uid).collection('appointments').orderBy('date', 'desc').limit(50);
+        const snap = await q.get();
 
         if (snap.empty) {
-          table.style.display = 'none';
           empty.style.display = 'block';
           return;
         }
 
+        empty.style.display = 'none';
+
         snap.forEach(doc=>{
           const ap = doc.data();
-          const tr = document.createElement('tr');
-          tr.className = 'row';
-          tr.innerHTML = `
-            <td>${fmtDate(ap.date)}</td>
-            <td>${ap.time || '—'}</td>
-            <td>${ap.professional || '—'}</td>
-            <td>${badge(ap.status || 'pendiente')}</td>
-            <td>
-              <button class="btn" data-id="${doc.id}" disabled>
-                <i class="fas fa-eye"></i> Ver
-              </button>
-            </td>`;
-          tbody.appendChild(tr);
+          const idx = stepIndex(ap.status || ap.phase || ap.estado);
+          const fecha = fmtDate(ap.date);
+          const hora = ap.time || '—';
+          const prof = ap.professional || ap.therapistName || '—';
+          const estado = normalizeStatus(ap.status || ap.phase || ap.estado) || 'Solicitud enviada';
+
+          const card = document.createElement('article');
+          card.className = 'cita';
+          card.innerHTML = `
+            <div class="cita-header">
+              <h3 class="cita-title"><i class="fas fa-user-md"></i> ${prof}</h3>
+              <div class="cita-meta"><i class="far fa-calendar"></i> ${fecha} · <i class="far fa-clock"></i> ${hora}</div>
+            </div>
+            <div class="tracker" role="list" aria-label="Progreso de la cita">
+              ${STEPS.map((label, i)=>`
+                <div class="step ${i < idx ? 'done' : ''} ${i === idx ? 'current' : ''}" role="listitem" aria-current="${i===idx?'step':'false'}" aria-label="${label}">
+                  <small>${label}</small>
+                  <div class="dot"></div>
+                </div>
+              `).join('')}
+            </div>
+            <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="font:600 .9rem 'Montserrat', sans-serif; color:var(--text-strong);">
+                Estado actual: ${estado}
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn" disabled title="Próximamente"><i class="fas fa-eye"></i> Detalle</button>
+              </div>
+            </div>
+          `;
+          cont.appendChild(card);
         });
 
-        empty.style.display = 'none';
-        table.style.display = 'table';
       }catch(err){
         console.error('loadCitas', err);
         alert('No se pudieron cargar las citas');
@@ -222,18 +266,11 @@
     }
 
     function fmtDate(ts){
-      // Admite Timestamp de Firestore o ISO string
       let d;
       if (ts && typeof ts.toDate === 'function') d = ts.toDate();
       else d = ts ? new Date(ts) : null;
       if (!d || isNaN(d)) return '—';
       return d.toLocaleDateString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit' });
-    }
-
-    function badge(status){
-      const label = String(status).toLowerCase();
-      const map = { pendiente:'Pendiente', confirmada:'Confirmada', realizada:'Realizada', cancelada:'Cancelada' };
-      return `<span style="font:600 .85rem 'Montserrat', sans-serif; padding:6px 10px; border-radius:999px; border:1px solid var(--glass-stroke); background:#fff">${map[label] || status}</span>`;
     }
   </script>
 </body>
