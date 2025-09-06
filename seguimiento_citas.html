@@ -53,21 +53,16 @@
       background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
     .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
 
-    /* ===== Card de cita + tracker ===== */
+    /* ===== Card de cita + tracker (placeholder visual) ===== */
     .cita{border:1px solid var(--glass-stroke); border-radius:16px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.85)); box-shadow:var(--shadow); padding:14px; margin:12px 0}
     .cita-header{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px}
     .cita-title{font:700 1rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
     .cita-meta{font-size:.9rem; opacity:.85}
-
     .tracker{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; align-items:center; margin-top:8px}
     .step{position:relative; text-align:center; padding:8px 6px; border:1px solid var(--glass-stroke); border-radius:12px; background:#fff}
     .step small{display:block; font:600 .78rem 'Montserrat', sans-serif; color:var(--text-strong)}
     .step .dot{width:10px; height:10px; border-radius:50%; background:#d3d8e0; margin:6px auto 0}
-    .step.done{background:linear-gradient(180deg, #f9fffb, #e9fff2); border-color:#bfe8cc}
-    .step.done .dot{background:#41c183}
-    .step.current{box-shadow:0 0 0 3px rgba(65,193,131,.25)}
     .legend{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; font-size:.85rem}
-
     .empty{border:1px dashed var(--glass-stroke); border-radius:12px; padding:18px; text-align:center; color:var(--text)}
   </style>
 </head>
@@ -103,7 +98,7 @@
 
       <div id="contenedorCitas">
         <div id="emptyState" class="empty" role="status" aria-live="polite">
-          Aún no hay citas registradas. Crea una nueva o espera confirmación de Administración.
+          (Placeholder) Aquí aparecerán tus citas. De momento, usa el chat para solicitarlas.
         </div>
       </div>
 
@@ -118,210 +113,49 @@
     © 2025 Autra Digital
   </footer>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
+  <!-- ===== JS mínimo: SOLO bolita Tawk y handlers ===== -->
   <script>
-    // ===== Firebase init (compartido) =====
-    const firebaseConfig = {
-      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
-      authDomain: "autra-digital.firebaseapp.com",
-      projectId: "autra-digital",
-      storageBucket: "autra-digital.firebasestorage.app",
-      messagingSenderId: "149401206632",
-      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
-      measurementId: "G-MEVPRYBQC1"
-    };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // ===== Guard de rol: Paciente o Terapeuta/Admin pueden ver su propio tracking =====
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) { window.location.href = './login.html'; return; }
-      try {
-        let role = null;
-        const cache = sessionStorage.getItem('autra_user');
-        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
-        if (!role) {
-          const snap = await db.collection('users').doc(user.uid).get();
-          role = snap.exists ? (snap.data().role || null) : null;
-          if (role === 'Formador') role = 'Admin';
-          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
-        }
-        loadCitas(user.uid, role);
-
-        // === Identificar usuario en Tawk.to (cuando cargue el widget) ===
-        setTawkVisitor(user.uid, user.email);
-      } catch (e) {
-        console.error('Guard seguimiento_citas', e);
-        window.location.href = './inicio.html';
-      }
-    });
-
-    document.getElementById('btnSalir')?.addEventListener('click', async (e) => {
+    // Botón salir: sin Firebase, redirigimos
+    document.getElementById('btnSalir')?.addEventListener('click', (e)=>{
       e.preventDefault();
-      try { await auth.signOut(); } finally { window.location.href = './index.html'; }
+      window.location.href = './index.html';
     });
 
-    document.getElementById('btnRefrescar')?.addEventListener('click', () => {
-      const uid = auth.currentUser?.uid;
-      if (uid) {
-        const cache = sessionStorage.getItem('autra_user');
-        let role = null;
-        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
-        loadCitas(uid, role);
-      }
-    });
-
-    // === "Nueva cita" abre el chat Tawk.to ===
-    document.getElementById('btnNuevaCita')?.addEventListener('click', () => {
-      if (window.Tawk_API?.maximize) {
+    // Abrir chat Tawk desde "Nueva cita"
+    function openChatWithTags(){
+      if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
         try {
-          Tawk_API.addTags?.(['seguimiento_citas','solicitud_cita']);
-          Tawk_API.addEvent?.('Nueva cita desde seguimiento');
-          Tawk_API.maximize();
-        } catch(e) { console.error(e); }
-      }
-    });
-
-    // ===== Modelo de estados (hilo visual tipo tracking) =====
-    const STEPS = [
-      'Solicitud enviada',
-      'Solicitud aceptada',
-      'Cita confirmada',
-      'Sesión agendada',
-      'Utilización confirmada'
-    ];
-
-    function normalizeStatus(s){
-      if (!s) return null;
-      const x = String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,'').trim();
-      if (x.includes('utilizacion') || x.includes('uso')) return 'Utilización confirmada';
-      if (x.includes('agendada') || x.includes('programada')) return 'Sesión agendada';
-      if (x.includes('confirmada')) return 'Cita confirmada';
-      if (x.includes('aceptada')) return 'Solicitud aceptada';
-      if (x.includes('enviada') || x.includes('solicitud')) return 'Solicitud enviada';
-      if (x.includes('realizada')) return 'Utilización confirmada';
-      if (x.includes('pendiente')) return 'Solicitud enviada';
-      return s;
-    }
-
-    function stepIndex(status){
-      const norm = normalizeStatus(status);
-      const i = STEPS.indexOf(norm);
-      return i >= 0 ? i : 0;
-    }
-
-    async function loadCitas(uid, role){
-      try{
-        const cont = document.getElementById('contenedorCitas');
-        const empty = document.getElementById('emptyState');
-        cont.innerHTML = '';
-        cont.appendChild(empty);
-
-        const snap = await db.collection('users')
-          .doc(uid)
-          .collection('appointments')
-          .orderBy('date', 'desc')
-          .limit(50)
-          .get();
-
-        if (snap.empty) {
-          empty.style.display = 'block';
+          window.Tawk_API.addTags?.(['seguimiento_citas','solicitud_cita']);
+          window.Tawk_API.addEvent?.('Nueva cita desde seguimiento');
+          window.Tawk_API.maximize();
           return;
-        }
-        empty.style.display = 'none';
-
-        snap.forEach(doc=>{
-          const ap = doc.data();
-          const idx = stepIndex(ap.status || ap.phase || ap.estado);
-          const fecha = fmtDate(ap.date);
-          const hora = ap.time || '—';
-          const prof = ap.professional || ap.therapistName || '—';
-          const estado = normalizeStatus(ap.status || ap.phase || ap.estado) || 'Solicitud enviada';
-
-          const card = document.createElement('article');
-          card.className = 'cita';
-          card.innerHTML = `
-            <div class="cita-header">
-              <h3 class="cita-title"><i class="fas fa-user-md"></i> ${prof}</h3>
-              <div class="cita-meta"><i class="far fa-calendar"></i> ${fecha} · <i class="far fa-clock"></i> ${hora}</div>
-            </div>
-            <div class="tracker" role="list" aria-label="Progreso de la cita">
-              ${STEPS.map((label, i)=>`
-                <div class="step ${i < idx ? 'done' : ''} ${i === idx ? 'current' : ''}" role="listitem" aria-current="${i===idx?'step':'false'}" aria-label="${label}">
-                  <small>${label}</small>
-                  <div class="dot"></div>
-                </div>
-              `).join('')}
-            </div>
-            <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
-              <div style="font:600 .9rem 'Montserrat', sans-serif; color:var(--text-strong);">
-                Estado actual: ${estado}
-              </div>
-              <div style="display:flex; gap:8px;">
-                <button class="btn" disabled title="Próximamente"><i class="fas fa-eye"></i> Detalle</button>
-              </div>
-            </div>
-          `;
-          cont.appendChild(card);
-        });
-
-      }catch(err){
-        console.error('loadCitas', err);
-        alert('No se pudieron cargar las citas');
+        } catch(_) {}
       }
-    }
-
-    function fmtDate(ts){
-      let d;
-      if (ts && typeof ts.toDate === 'function') d = ts.toDate();
-      else d = ts ? new Date(ts) : null;
-      if (!d || isNaN(d)) return '—';
-      return d.toLocaleDateString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit' });
-    }
-
-    // ===== Identificación en Tawk.to =====
-    async function setTawkVisitor(uid, email){
-      let nombre = null;
-      try {
-        const snap = await db.collection('users').doc(uid).get();
-        nombre = snap.exists ? (snap.data().nombre || null) : null;
-      } catch(_){}
-
-      function apply(){
-        try{
-          if (window.Tawk_API?.setAttributes) {
-            Tawk_API.setAttributes({
-              name: nombre || email || 'Usuario Autra',
-              email: email || '',
-              uid: uid
-            }, function(err){ if(err) console.error('Tawk setAttributes error:',err); });
-          } else if (window.Tawk_API) {
-            // Fallback
-            Tawk_API.visitor = {
-              name: nombre || email || 'Usuario Autra',
-              email: email || ''
-            };
-          }
-        }catch(e){ console.error(e); }
-      }
-
-      // Espera a que cargue Tawk (si no está aún disponible)
+      // Si aún no cargó, espera y reintenta un poco
+      let tries = 0;
       const iv = setInterval(()=>{
-        if (window.Tawk_API) {
-          apply();
+        tries++;
+        if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+          try {
+            window.Tawk_API.addTags?.(['seguimiento_citas','solicitud_cita']);
+            window.Tawk_API.addEvent?.('Nueva cita desde seguimiento');
+            window.Tawk_API.maximize();
+          } catch(_) {}
           clearInterval(iv);
         }
-      },300);
-      setTimeout(()=> clearInterval(iv),8000);
+        if (tries > 30) clearInterval(iv); // ~9s
+      }, 300);
     }
+
+    document.getElementById('btnNuevaCita')?.addEventListener('click', openChatWithTags);
+    document.getElementById('btnRefrescar')?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      // sin backend aún; puedes usar esto para refrescar el estado del chat si quisieras
+      openChatWithTags();
+    });
   </script>
 
-  <!-- Tawk.to (bolita flotante oficial) -->
+  <!-- ===== Tawk.to (bolita flotante oficial) ===== -->
   <script type="text/javascript">
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     (function(){
