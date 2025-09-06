@@ -138,7 +138,7 @@
           return;
         } catch(_) {}
       }
-      // Si aún no cargó, espera y reintenta un poco
+      // Si aún no cargó, espera y reintenta un poco (~9s máx)
       let tries = 0;
       const iv = setInterval(()=>{
         tries++;
@@ -150,29 +150,26 @@
           } catch(_) {}
           clearInterval(iv);
         }
-        if (tries > 30) clearInterval(iv); // ~9s
+        if (tries > 30) clearInterval(iv);
       }, 300);
     }
     document.getElementById('btnNuevaCita')?.addEventListener('click', openChatWithTags);
     document.getElementById('btnRefrescar')?.addEventListener('click', (e)=>{ e.preventDefault(); openChatWithTags(); });
   </script>
 
-  <!-- ===== Tawk.to (bolita flotante) ===== -->
+  <!-- ===== Tawk.to (bolita de chat con tus IDs) ===== -->
+  <!--Start of Tawk.to Script-->
   <script type="text/javascript">
-    // Usa tu PROPERTY_ID y WIDGET_ID
-    // PROPERTY_ID (te lo pasaste): f47e5981bb01052b72a8a66bb79294892bda7d5b
-    // WIDGET_ID: pégalo aquí (empieza por "1", ej. 1h8abcxyz)
-    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-    (function(){
-      var PROPERTY_ID = 'f47e5981bb01052b72a8a66bb79294892bda7d5b';
-      var WIDGET_ID   = '1_TU_WIDGET_ID_AQUI'; // 👈 reemplázalo por tu widget real
-      var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/' + PROPERTY_ID + '/' + WIDGET_ID;
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-    })();
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/660bca27a0c6737bd12750d2/1hqf0rc1b';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
   </script>
+  <!--End of Tawk.to Script-->
 </body>
 </html>
