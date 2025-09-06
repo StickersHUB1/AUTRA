@@ -53,16 +53,6 @@
       background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
     .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
 
-    /* ===== Card de cita + tracker (placeholder visual) ===== */
-    .cita{border:1px solid var(--glass-stroke); border-radius:16px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.85)); box-shadow:var(--shadow); padding:14px; margin:12px 0}
-    .cita-header{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px}
-    .cita-title{font:700 1rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
-    .cita-meta{font-size:.9rem; opacity:.85}
-    .tracker{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; align-items:center; margin-top:8px}
-    .step{position:relative; text-align:center; padding:8px 6px; border:1px solid var(--glass-stroke); border-radius:12px; background:#fff}
-    .step small{display:block; font:600 .78rem 'Montserrat', sans-serif; color:var(--text-strong)}
-    .step .dot{width:10px; height:10px; border-radius:50%; background:#d3d8e0; margin:6px auto 0}
-    .legend{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; font-size:.85rem}
     .empty{border:1px dashed var(--glass-stroke); border-radius:12px; padding:18px; text-align:center; color:var(--text)}
   </style>
 </head>
@@ -101,11 +91,6 @@
           (Placeholder) Aquí aparecerán tus citas. De momento, usa el chat para solicitarlas.
         </div>
       </div>
-
-      <div class="legend" aria-hidden="true">
-        <span><i class="fas fa-circle" style="font-size:.55rem"></i> Avance por etapas</span>
-        <span>Estados: Solicitud enviada → Solicitud aceptada → Cita confirmada → Sesión agendada → Utilización confirmada</span>
-      </div>
     </section>
   </main>
 
@@ -113,15 +98,37 @@
     © 2025 Autra Digital
   </footer>
 
-  <!-- ===== JS mínimo: SOLO bolita Tawk y handlers ===== -->
+  <!-- ===== Firebase SDKs ===== -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- ===== Tu init Firebase (tal cual) ===== -->
   <script>
-    // Botón salir: sin Firebase, redirigimos
+    // ===== Firebase init (compartido) =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+      authDomain: "autra-digital.firebaseapp.com",
+      projectId: "autra-digital",
+      storageBucket: "autra-digital.firebasestorage.app",
+      messagingSenderId: "149401206632",
+      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
+      measurementId: "G-MEVPRYBQC1"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
+
+  <!-- ===== JS: handlers para abrir el chat ===== -->
+  <script>
+    // Botón Salir (simple)
     document.getElementById('btnSalir')?.addEventListener('click', (e)=>{
       e.preventDefault();
       window.location.href = './index.html';
     });
 
-    // Abrir chat Tawk desde "Nueva cita"
+    // Abrir chat Tawk desde "Nueva cita" o "Refrescar"
     function openChatWithTags(){
       if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
         try {
@@ -146,22 +153,22 @@
         if (tries > 30) clearInterval(iv); // ~9s
       }, 300);
     }
-
     document.getElementById('btnNuevaCita')?.addEventListener('click', openChatWithTags);
-    document.getElementById('btnRefrescar')?.addEventListener('click', (e)=>{
-      e.preventDefault();
-      // sin backend aún; puedes usar esto para refrescar el estado del chat si quisieras
-      openChatWithTags();
-    });
+    document.getElementById('btnRefrescar')?.addEventListener('click', (e)=>{ e.preventDefault(); openChatWithTags(); });
   </script>
 
-  <!-- ===== Tawk.to (bolita flotante oficial) ===== -->
+  <!-- ===== Tawk.to (bolita flotante) ===== -->
   <script type="text/javascript">
+    // Usa tu PROPERTY_ID y WIDGET_ID
+    // PROPERTY_ID (te lo pasaste): f47e5981bb01052b72a8a66bb79294892bda7d5b
+    // WIDGET_ID: pégalo aquí (empieza por "1", ej. 1h8abcxyz)
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     (function(){
+      var PROPERTY_ID = 'f47e5981bb01052b72a8a66bb79294892bda7d5b';
+      var WIDGET_ID   = '1_TU_WIDGET_ID_AQUI'; // 👈 reemplázalo por tu widget real
       var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
       s1.async=true;
-      s1.src='https://embed.tawk.to/TU_PROPERTY_ID/TU_WIDGET_ID';
+      s1.src='https://embed.tawk.to/' + PROPERTY_ID + '/' + WIDGET_ID;
       s1.charset='UTF-8';
       s1.setAttribute('crossorigin','*');
       s0.parentNode.insertBefore(s1,s0);
