@@ -123,210 +123,215 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-<script>
-  // ===== Firebase init (compartido) =====
-  const firebaseConfig = {
-    apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
-    authDomain: "autra-digital.firebaseapp.com",
-    projectId: "autra-digital",
-    storageBucket: "autra-digital.firebasestorage.app",
-    messagingSenderId: "149401206632",
-    appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
-    measurementId: "G-MEVPRYBQC1"
-  };
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+  <script>
+    // ===== Firebase init (compartido) =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+      authDomain: "autra-digital.firebaseapp.com",
+      projectId: "autra-digital",
+      storageBucket: "autra-digital.firebasestorage.app",
+      messagingSenderId: "149401206632",
+      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
+      measurementId: "G-MEVPRYBQC1"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-  // ===== Guard de rol: Paciente o Terapeuta/Admin pueden ver su propio tracking =====
-  auth.onAuthStateChanged(async (user) => {
-    if (!user) { window.location.href = './login.html'; return; }
-    try {
-      let role = null;
-      const cache = sessionStorage.getItem('autra_user');
-      if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
-      if (!role) {
-        const snap = await db.collection('users').doc(user.uid).get();
-        role = snap.exists ? (snap.data().role || null) : null;
-        if (role === 'Formador') role = 'Admin';
-        sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
-      }
-      loadCitas(user.uid, role);
-
-      // === Identificar usuario en Tawk.to ===
-      setTawkVisitor(user.uid, user.email);
-    } catch (e) {
-      console.error('Guard seguimiento_citas', e);
-      window.location.href = './inicio.html';
-    }
-  });
-
-  document.getElementById('btnSalir')?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    try { await auth.signOut(); } finally { window.location.href = './index.html'; }
-  });
-
-  document.getElementById('btnRefrescar')?.addEventListener('click', () => {
-    const uid = auth.currentUser?.uid;
-    if (uid) {
-      const cache = sessionStorage.getItem('autra_user');
-      let role = null;
-      if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
-      loadCitas(uid, role);
-    }
-  });
-
-  // === Ahora "Nueva cita" abre el chat Tawk.to ===
-  document.getElementById('btnNuevaCita')?.addEventListener('click', () => {
-    if (window.Tawk_API?.maximize) {
+    // ===== Guard de rol: Paciente o Terapeuta/Admin pueden ver su propio tracking =====
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) { window.location.href = './login.html'; return; }
       try {
-        Tawk_API.addTags?.(['seguimiento_citas','solicitud_cita']);
-        Tawk_API.addEvent?.('Nueva cita desde seguimiento');
-        Tawk_API.maximize();
-      } catch(e) { console.error(e); }
-    }
-  });
-
-  // ===== Modelo de estados (hilo visual tipo tracking) =====
-  const STEPS = [
-    'Solicitud enviada',
-    'Solicitud aceptada',
-    'Cita confirmada',
-    'Sesión agendada',
-    'Utilización confirmada'
-  ];
-
-  function normalizeStatus(s){
-    if (!s) return null;
-    const x = String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,'').trim();
-    if (x.includes('utilizacion') || x.includes('uso')) return 'Utilización confirmada';
-    if (x.includes('agendada') || x.includes('programada')) return 'Sesión agendada';
-    if (x.includes('confirmada')) return 'Cita confirmada';
-    if (x.includes('aceptada')) return 'Solicitud aceptada';
-    if (x.includes('enviada') || x.includes('solicitud')) return 'Solicitud enviada';
-    if (x.includes('realizada')) return 'Utilización confirmada';
-    if (x.includes('pendiente')) return 'Solicitud enviada';
-    return s;
-  }
-
-  function stepIndex(status){
-    const norm = normalizeStatus(status);
-    const i = STEPS.indexOf(norm);
-    return i >= 0 ? i : 0;
-  }
-
-  async function loadCitas(uid, role){
-    try{
-      const cont = document.getElementById('contenedorCitas');
-      const empty = document.getElementById('emptyState');
-      cont.innerHTML = '';
-      cont.appendChild(empty);
-
-      let q = db.collection('users').doc(uid).collection('appointments').orderBy('date', 'desc').limit(50);
-      const snap = await q.get();
-
-      if (snap.empty) {
-        empty.style.display = 'block';
-        return;
-      }
-      empty.style.display = 'none';
-
-      snap.forEach(doc=>{
-        const ap = doc.data();
-        const idx = stepIndex(ap.status || ap.phase || ap.estado);
-        const fecha = fmtDate(ap.date);
-        const hora = ap.time || '—';
-        const prof = ap.professional || ap.therapistName || '—';
-        const estado = normalizeStatus(ap.status || ap.phase || ap.estado) || 'Solicitud enviada';
-
-        const card = document.createElement('article');
-        card.className = 'cita';
-        card.innerHTML = `
-          <div class="cita-header">
-            <h3 class="cita-title"><i class="fas fa-user-md"></i> ${prof}</h3>
-            <div class="cita-meta"><i class="far fa-calendar"></i> ${fecha} · <i class="far fa-clock"></i> ${hora}</div>
-          </div>
-          <div class="tracker" role="list" aria-label="Progreso de la cita">
-            ${STEPS.map((label, i)=>`
-              <div class="step ${i < idx ? 'done' : ''} ${i === idx ? 'current' : ''}" role="listitem" aria-current="${i===idx?'step':'false'}" aria-label="${label}">
-                <small>${label}</small>
-                <div class="dot"></div>
-              </div>
-            `).join('')}
-          </div>
-          <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
-            <div style="font:600 .9rem 'Montserrat', sans-serif; color:var(--text-strong);">
-              Estado actual: ${estado}
-            </div>
-            <div style="display:flex; gap:8px;">
-              <button class="btn" disabled title="Próximamente"><i class="fas fa-eye"></i> Detalle</button>
-            </div>
-          </div>
-        `;
-        cont.appendChild(card);
-      });
-
-    }catch(err){
-      console.error('loadCitas', err);
-      alert('No se pudieron cargar las citas');
-    }
-  }
-
-  function fmtDate(ts){
-    let d;
-    if (ts && typeof ts.toDate === 'function') d = ts.toDate();
-    else d = ts ? new Date(ts) : null;
-    if (!d || isNaN(d)) return '—';
-    return d.toLocaleDateString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit' });
-  }
-
-  // ===== Identificación en Tawk.to =====
-  async function setTawkVisitor(uid, email){
-    let nombre = null;
-    try {
-      const snap = await db.collection('users').doc(uid).get();
-      nombre = snap.exists ? (snap.data().nombre || null) : null;
-    } catch(_){}
-
-    function apply(){
-      try{
-        if (window.Tawk_API?.setAttributes) {
-          Tawk_API.setAttributes({
-            name: nombre || email || 'Usuario Autra',
-            email: email || '',
-            uid: uid
-          }, function(err){ if(err) console.error('Tawk setAttributes error:',err); });
-        } else {
-          // Fallback API
-          Tawk_API.visitor = {
-            name: nombre || email || 'Usuario Autra',
-            email: email || ''
-          };
+        let role = null;
+        const cache = sessionStorage.getItem('autra_user');
+        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
+        if (!role) {
+          const snap = await db.collection('users').doc(user.uid).get();
+          role = snap.exists ? (snap.data().role || null) : null;
+          if (role === 'Formador') role = 'Admin';
+          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
         }
-      }catch(e){ console.error(e); }
+        loadCitas(user.uid, role);
+
+        // === Identificar usuario en Tawk.to (cuando cargue el widget) ===
+        setTawkVisitor(user.uid, user.email);
+      } catch (e) {
+        console.error('Guard seguimiento_citas', e);
+        window.location.href = './inicio.html';
+      }
+    });
+
+    document.getElementById('btnSalir')?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await auth.signOut(); } finally { window.location.href = './index.html'; }
+    });
+
+    document.getElementById('btnRefrescar')?.addEventListener('click', () => {
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        const cache = sessionStorage.getItem('autra_user');
+        let role = null;
+        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
+        loadCitas(uid, role);
+      }
+    });
+
+    // === "Nueva cita" abre el chat Tawk.to ===
+    document.getElementById('btnNuevaCita')?.addEventListener('click', () => {
+      if (window.Tawk_API?.maximize) {
+        try {
+          Tawk_API.addTags?.(['seguimiento_citas','solicitud_cita']);
+          Tawk_API.addEvent?.('Nueva cita desde seguimiento');
+          Tawk_API.maximize();
+        } catch(e) { console.error(e); }
+      }
+    });
+
+    // ===== Modelo de estados (hilo visual tipo tracking) =====
+    const STEPS = [
+      'Solicitud enviada',
+      'Solicitud aceptada',
+      'Cita confirmada',
+      'Sesión agendada',
+      'Utilización confirmada'
+    ];
+
+    function normalizeStatus(s){
+      if (!s) return null;
+      const x = String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,'').trim();
+      if (x.includes('utilizacion') || x.includes('uso')) return 'Utilización confirmada';
+      if (x.includes('agendada') || x.includes('programada')) return 'Sesión agendada';
+      if (x.includes('confirmada')) return 'Cita confirmada';
+      if (x.includes('aceptada')) return 'Solicitud aceptada';
+      if (x.includes('enviada') || x.includes('solicitud')) return 'Solicitud enviada';
+      if (x.includes('realizada')) return 'Utilización confirmada';
+      if (x.includes('pendiente')) return 'Solicitud enviada';
+      return s;
     }
 
-    // Espera a que cargue Tawk
-    const iv = setInterval(()=>{
-      if (window.Tawk_API) {
-        apply();
-        clearInterval(iv);
-      }
-    },300);
-    setTimeout(()=> clearInterval(iv),8000);
-  }
-</script>
+    function stepIndex(status){
+      const norm = normalizeStatus(status);
+      const i = STEPS.indexOf(norm);
+      return i >= 0 ? i : 0;
+    }
 
-<!-- Tawk.to -->
-<script type="text/javascript">
-  var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-  (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/TU_PROPERTY_ID/TU_WIDGET_ID';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-  })();
-</script>
+    async function loadCitas(uid, role){
+      try{
+        const cont = document.getElementById('contenedorCitas');
+        const empty = document.getElementById('emptyState');
+        cont.innerHTML = '';
+        cont.appendChild(empty);
+
+        const snap = await db.collection('users')
+          .doc(uid)
+          .collection('appointments')
+          .orderBy('date', 'desc')
+          .limit(50)
+          .get();
+
+        if (snap.empty) {
+          empty.style.display = 'block';
+          return;
+        }
+        empty.style.display = 'none';
+
+        snap.forEach(doc=>{
+          const ap = doc.data();
+          const idx = stepIndex(ap.status || ap.phase || ap.estado);
+          const fecha = fmtDate(ap.date);
+          const hora = ap.time || '—';
+          const prof = ap.professional || ap.therapistName || '—';
+          const estado = normalizeStatus(ap.status || ap.phase || ap.estado) || 'Solicitud enviada';
+
+          const card = document.createElement('article');
+          card.className = 'cita';
+          card.innerHTML = `
+            <div class="cita-header">
+              <h3 class="cita-title"><i class="fas fa-user-md"></i> ${prof}</h3>
+              <div class="cita-meta"><i class="far fa-calendar"></i> ${fecha} · <i class="far fa-clock"></i> ${hora}</div>
+            </div>
+            <div class="tracker" role="list" aria-label="Progreso de la cita">
+              ${STEPS.map((label, i)=>`
+                <div class="step ${i < idx ? 'done' : ''} ${i === idx ? 'current' : ''}" role="listitem" aria-current="${i===idx?'step':'false'}" aria-label="${label}">
+                  <small>${label}</small>
+                  <div class="dot"></div>
+                </div>
+              `).join('')}
+            </div>
+            <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="font:600 .9rem 'Montserrat', sans-serif; color:var(--text-strong);">
+                Estado actual: ${estado}
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn" disabled title="Próximamente"><i class="fas fa-eye"></i> Detalle</button>
+              </div>
+            </div>
+          `;
+          cont.appendChild(card);
+        });
+
+      }catch(err){
+        console.error('loadCitas', err);
+        alert('No se pudieron cargar las citas');
+      }
+    }
+
+    function fmtDate(ts){
+      let d;
+      if (ts && typeof ts.toDate === 'function') d = ts.toDate();
+      else d = ts ? new Date(ts) : null;
+      if (!d || isNaN(d)) return '—';
+      return d.toLocaleDateString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit' });
+    }
+
+    // ===== Identificación en Tawk.to =====
+    async function setTawkVisitor(uid, email){
+      let nombre = null;
+      try {
+        const snap = await db.collection('users').doc(uid).get();
+        nombre = snap.exists ? (snap.data().nombre || null) : null;
+      } catch(_){}
+
+      function apply(){
+        try{
+          if (window.Tawk_API?.setAttributes) {
+            Tawk_API.setAttributes({
+              name: nombre || email || 'Usuario Autra',
+              email: email || '',
+              uid: uid
+            }, function(err){ if(err) console.error('Tawk setAttributes error:',err); });
+          } else if (window.Tawk_API) {
+            // Fallback
+            Tawk_API.visitor = {
+              name: nombre || email || 'Usuario Autra',
+              email: email || ''
+            };
+          }
+        }catch(e){ console.error(e); }
+      }
+
+      // Espera a que cargue Tawk (si no está aún disponible)
+      const iv = setInterval(()=>{
+        if (window.Tawk_API) {
+          apply();
+          clearInterval(iv);
+        }
+      },300);
+      setTimeout(()=> clearInterval(iv),8000);
+    }
+  </script>
+
+  <!-- Tawk.to (bolita flotante oficial) -->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function(){
+      var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/TU_PROPERTY_ID/TU_WIDGET_ID';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
+</body>
 </html>
