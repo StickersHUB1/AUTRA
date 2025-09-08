@@ -12,330 +12,176 @@
       --bg1:#ABC8E9; --bg2:#F9EEE0;
       --text-strong:#545454; --text:#737373;
       --accent:#ABC8E9; --glass-stroke:rgba(171,200,233,.35);
-      --glass:#ffffffb3; /* 70% */ --glass-soft:#ffffffa6; /* 65% */
-      --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
+      --glass:#ffffffb3; --glass-soft:#ffffffa6;
+      --radius:20px; --shadow:0 16px 40px rgba(0,0,0,.1);
       --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
       --overlay: rgba(245, 245, 245, .75);
     }
     *,*::before,*::after{box-sizing:border-box}
-    html,body{height:auto}
     body{
-      margin:0; font-family:'Lato', Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      margin:0; font-family:'Lato', Montserrat, system-ui, sans-serif;
       color:var(--text);
       background:radial-gradient(1200px 800px at 85% -10%, rgba(171,200,233,.35), transparent 60%),
                  radial-gradient(900px 700px at -10% 100%, rgba(171,200,233,.25), transparent 55%),
                  linear-gradient(160deg, var(--bg1), var(--bg2));
-      min-height:100dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+      min-height:100dvh;
     }
     .orb{position:fixed; filter:blur(40px); opacity:.7; pointer-events:none}
     .orb.one{width:420px;height:420px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); top:-120px; right:-80px}
     .orb.two{width:520px;height:520px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); bottom:-140px; left:-120px}
 
     /* Topbar */
-    .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%); -webkit-backdrop-filter:blur(14px) saturate(120%);
-      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4)); border-bottom:1px solid var(--glass-stroke);
-      box-shadow:0 8px 30px rgba(0,0,0,.06)}
-    .topbar .container{max-width:1100px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:16px; justify-content:space-between}
+    .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%);
+      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4));
+      border-bottom:1px solid var(--glass-stroke); box-shadow:0 8px 30px rgba(0,0,0,.06)}
+    .topbar .container{max-width:1100px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; justify-content:space-between}
     .brand{display:flex; align-items:center; gap:12px}
-    .brand img{width:36px; height:36px; object-fit:contain}
+    .brand img{width:36px; height:36px}
     .brand h1{font:700 18px/1.1 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
     nav ul{display:flex; list-style:none; gap:8px; margin:0; padding:0}
-    .tab{appearance:none; border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px; font:600 14px/1 'Montserrat', sans-serif; color:var(--text-strong);
-      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+    .tab{border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px;
+      font:600 14px/1 'Montserrat', sans-serif; color:var(--text-strong);
+      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75));
+      text-decoration:none; display:inline-flex; align-items:center; gap:8px; cursor:pointer}
     .tab[aria-current="page"]{box-shadow:var(--focus)}
-    .tab:focus-visible{outline:none; box-shadow:var(--focus)}
 
-    /* Layout */
-    .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
-    .layout{display:flex; gap:20px; flex-wrap:wrap; justify-content:space-between}
-    .left-panel,.right-panel{backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
-      background:var(--glass); border:1px solid var(--glass-stroke); border-radius:16px; box-shadow:var(--shadow); padding:16px}
-    .left-panel{flex:2; min-width:560px}
-    .right-panel{flex:1; min-width:300px; display:flex; flex-direction:column; align-items:center}
-
-    /* Perfil (disponible) */
-    .foto-perfil{width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:12px; border:1px solid var(--glass-stroke); box-shadow:var(--shadow); background:#fff}
-    .nombre{font:700 1.15rem 'Montserrat', sans-serif; color:var(--text-strong); margin:2px 0 6px}
-    .descripcion{font-size:.9rem; color:var(--text); text-align:center; margin:10px 0; max-width:90%}
-    .actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; justify-content:center}
-    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
-    .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
-
-    /* Tarjetas bloqueadas (en obras) */
-    .is-disabled{position:relative}
-    .is-disabled *{pointer-events:none}
-    .is-disabled .block-overlay{position:absolute; inset:0; background:var(--overlay); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); border-radius:inherit; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px}
-    .overlay-badge{font:700 .95rem 'Montserrat', sans-serif; color:#333; display:inline-flex; align-items:center; gap:10px}
-
-    /* Contenido tarjetas */
-    .card-title{font:700 1rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0 0 10px}
-    .list{display:grid; gap:10px}
-    .list-item{border:1px solid var(--glass-stroke); border-radius:12px; padding:10px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.8))}
-
-    @media (max-width: 768px){
-      .left-panel{min-width:100%}
-      .right-panel{min-width:100%}
+    /* Perfil paciente */
+    .perfil-paciente {
+      max-width: 640px;
+      margin: 32px auto;
+      background: var(--glass);
+      border: 1px solid var(--glass-stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
+    .perfil-titulo {
+      font: 700 1.3rem 'Montserrat', sans-serif;
+      text-align: center;
+      color: var(--text-strong);
+      margin: 0;
+    }
+    .perfil-info {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .perfil-foto img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--glass-stroke);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .perfil-datos p {
+      margin: 4px 0;
+      font-size: 0.92rem;
+      color: var(--text-strong);
+    }
+    .perfil-descripcion {
+      border: 1px solid var(--glass-stroke);
+      border-radius: 14px;
+      background: rgba(255,255,255,.65);
+      padding: 14px;
+    }
+    .perfil-descripcion h3 {
+      font: 600 1rem 'Montserrat', sans-serif;
+      margin: 0 0 8px;
+      color: var(--text-strong);
+    }
+    .perfil-descripcion p {
+      font-size: 0.88rem;
+      margin: 0;
+    }
+    .perfil-acciones {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .btn {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 14px; border-radius:10px;
+      border:1px solid var(--glass-stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75));
+      font:600 0.9rem 'Montserrat', sans-serif; color:var(--text-strong);
+      cursor:pointer; text-decoration:none;
+      transition:.2s box-shadow;
+    }
+    .btn:hover{box-shadow:0 6px 18px rgba(0,0,0,.12)}
 
-.perfil-paciente {
-  width: 100%;
-  background: var(--glass);
-  border: 1px solid var(--glass-stroke);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.perfil-titulo {
-  font: 700 1.4rem 'Montserrat', sans-serif;
-  text-align: center;
-  color: var(--text-strong);
-  margin: 0;
-}
-
-.perfil-info {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.perfil-foto img {
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
-  object-fit: cover;
-  border: 2px solid var(--glass-stroke);
-  background: #fff;
-  box-shadow: var(--shadow);
-}
-
-.perfil-datos p {
-  margin: 4px 0;
-  font-size: 0.95rem;
-  color: var(--text-strong);
-}
-
-.perfil-descripcion {
-  border: 1px solid var(--glass-stroke);
-  border-radius: 12px;
-  background: #fff9;
-  padding: 12px;
-  min-height: 120px;
-}
-
-.perfil-descripcion h3 {
-  font: 600 1rem 'Montserrat', sans-serif;
-  margin: 0 0 8px;
-  color: var(--text-strong);
-}
-
-.perfil-descripcion p {
-  font-size: 0.9rem;
-  color: var(--text);
-  margin: 0;
-}
-
-.perfil-acciones {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  display: none;              /* oculto por defecto */
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal.open {
-  display: flex;              /* visible cuando se abre */
-}
-
-.modal-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-  animation: fadeInUp .3s ease;
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  border: none;
-  background: transparent;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.field {
-  margin-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.field label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 6px;
-  color: var(--text-strong);
-}
-
-.field input,
-.field textarea {
-  border: 1px solid var(--glass-stroke);
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 0.9rem;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 16px;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Compactar perfil paciente */
-.perfil-paciente {
-  padding: 16px;          /* menos padding que antes */
-  gap: 16px;              /* reducimos espacio vertical */
-}
-
-.perfil-titulo {
-  font-size: 1.2rem;      /* un poco más pequeño */
-  margin-bottom: 4px;
-}
-
-.perfil-info {
-  gap: 14px;              /* menos espacio entre foto y datos */
-}
-
-.perfil-foto img {
-  width: 100px;           /* más pequeña */
-  height: 100px;
-  border-radius: 10px;
-}
-
-.perfil-datos p {
-  margin: 2px 0;          /* compactar líneas */
-  font-size: 0.9rem;
-}
-
-.perfil-descripcion {
-  padding: 10px;          /* menos padding */
-  min-height: 90px;       /* antes 120px */
-}
-
-.perfil-descripcion h3 {
-  font-size: 0.95rem;
-  margin-bottom: 6px;
-}
-
-.perfil-descripcion p {
-  font-size: 0.85rem;
-}
-
-.perfil-acciones {
-  margin-top: 4px;
-}
-
-.perfil-acciones .btn {
-  padding: 8px 12px;      /* botones más ajustados */
-  font-size: 0.85rem;
-  border-radius: 10px;
-}
-
-/* Compactar horizontalmente el perfil paciente */
-.perfil-paciente {
-  max-width: 700px;     /* límite de ancho */
-  margin: 0 auto;       /* centrado */
-  padding-left: 32px;   /* más aire lateral */
-  padding-right: 32px;
-}
-
+    /* Modal */
+    .modal{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none;
+      align-items:center; justify-content:center; z-index:999}
+    .modal.open{display:flex}
+    .modal-card{background:#fff; border-radius:16px; padding:20px; max-width:500px; width:90%; box-shadow:0 12px 40px rgba(0,0,0,.25)}
+    .modal-close{position:absolute; top:12px; right:16px; border:none; background:transparent; font-size:22px; cursor:pointer}
+    .field{margin-bottom:16px; display:flex; flex-direction:column}
+    .field label{font-weight:600; font-size:.9rem; margin-bottom:6px; color:var(--text-strong)}
+    .field input,.field textarea{border:1px solid var(--glass-stroke); border-radius:10px; padding:10px; font-size:.9rem}
+    .modal-actions{display:flex; gap:10px; justify-content:flex-end; margin-top:16px}
   </style>
 </head>
 <body>
-  <div class="orb one" aria-hidden="true"></div>
-  <div class="orb two" aria-hidden="true"></div>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
 
-  <!-- Topbar -->
-  <header class="topbar" role="banner">
+  <header class="topbar">
     <div class="container">
-      <a class="brand" href="./inicio.html" aria-label="Autra Digital">
+      <a class="brand" href="./inicio.html">
         <img src="logotipo.png" alt="Autra Digital Logo" />
         <h1>Autra Digital</h1>
       </a>
-<nav aria-label="Navegación principal">
-  <ul>
-    <li><a class="tab" href="./inicio.html"><i class="fas fa-home"></i> Inicio</a></li>
-    <li><a class="tab" aria-current="page" href="./dashboard_basico.html"><i class="fas fa-user"></i> Perfil</a></li>
-    <li><a class="tab" href="./seguimiento_citas.html"><i class="fas fa-calendar-check"></i> Seguimiento de citas</a></li>
-    <li><a id="btnSalir" class="tab" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
-  </ul>
-</nav>
+      <nav>
+        <ul>
+          <li><a class="tab" href="./inicio.html"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a class="tab" aria-current="page" href="./dashboard_basico.html"><i class="fas fa-user"></i> Perfil</a></li>
+          <li><a class="tab" href="./seguimiento_citas.html"><i class="fas fa-calendar-check"></i> Seguimiento</a></li>
+          <li><a id="btnSalir" class="tab" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
-      <!-- Panel derecho: Perfil paciente -->
-<div class="perfil-paciente">
-  <h2 class="perfil-titulo">PERFIL PACIENTE</h2>
-
-  <div class="perfil-info">
-    <div class="perfil-foto">
-      <img id="fotoPerfil" alt="Foto de perfil" src="data:image/svg+xml;utf8,
-      <svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'>
-        <circle cx='60' cy='60' r='60' fill='%23f2f2f2'/>
-        <circle cx='60' cy='46' r='22' fill='%23d9d9d9'/>
-        <path d='M20 108c8-24 36-32 40-32s34 8 40 32' fill='%23d9d9d9'/>
-      </svg>">
+  <!-- Perfil paciente -->
+  <div class="perfil-paciente">
+    <h2 class="perfil-titulo">PERFIL PACIENTE</h2>
+    <div class="perfil-info">
+      <div class="perfil-foto">
+        <img id="fotoPerfil" alt="Foto de perfil" src="data:image/svg+xml;utf8,
+        <svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'>
+          <circle cx='60' cy='60' r='60' fill='%23f2f2f2'/>
+          <circle cx='60' cy='46' r='22' fill='%23d9d9d9'/>
+          <path d='M20 108c8-24 36-32 40-32s34 8 40 32' fill='%23d9d9d9'/>
+        </svg>">
+      </div>
+      <div class="perfil-datos">
+        <p><strong>Nombre:</strong> <span id="nombreUsuario">—</span></p>
+        <p><strong>Fecha de nacimiento:</strong> <span id="fechaNacimiento">—</span></p>
+        <p><strong>Ciudad/Provincia:</strong> <span id="ciudadUsuario">—</span></p>
+        <p><strong>Código paciente:</strong> <span id="codigoPaciente">A001</span></p>
+      </div>
     </div>
-    <div class="perfil-datos">
-      <p><strong>Nombre:</strong> <span id="nombreUsuario">—</span></p>
-      <p><strong>Fecha de nacimiento:</strong> <span id="fechaNacimiento">—</span></p>
-      <p><strong>Ciudad/Provincia:</strong> <span id="ciudadUsuario">—</span></p>
-      <p><strong>Código paciente:</strong> <span id="codigoPaciente">A001</span></p>
+    <div class="perfil-descripcion">
+      <h3>DESCRIPCIÓN</h3>
+      <p id="descUsuario">—</p>
+    </div>
+    <div class="perfil-acciones">
+      <button id="btnEditarPerfil" class="btn"><i class="fas fa-user-cog"></i> Editar perfil</button>
     </div>
   </div>
-
-  <div class="perfil-descripcion">
-    <h3>DESCRIPCIÓN</h3>
-    <p id="descUsuario">—</p>
-  </div>
-
-  <div class="perfil-acciones">
-    <button id="btnEditarPerfil" class="btn">
-      <i class="fas fa-user-cog"></i> Editar perfil
-    </button>
-  </div>
-</div>
-
-    </section>
-  </main>
 
   <footer style="margin:24px auto; text-align:center; color:var(--text); font:.9rem 'Lato', sans-serif; opacity:.8">
     © 2025 Autra Digital
   </footer>
 
-  <!-- Modal unificado: Editar perfil (paciente) -->
-  <div id="modalPerfil" class="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalPerfilTitle">
-      <button class="modal-close" aria-label="Cerrar" data-close="modalPerfil">×</button>
+  <!-- Modal -->
+  <div id="modalPerfil" class="modal">
+    <div class="modal-card">
+      <button class="modal-close" data-close="modalPerfil">×</button>
       <h3 id="modalPerfilTitle">Editar perfil</h3>
       <div class="field">
         <label for="inputFoto">Foto de perfil (opcional)</label>
@@ -343,7 +189,7 @@
       </div>
       <div class="field">
         <label for="textareaDescripcion">Sobre mí</label>
-        <textarea id="textareaDescripcion" rows="6" placeholder="Describe brevemente tu objetivo terapéutico, preferencias de comunicación, etc." maxlength="800"></textarea>
+        <textarea id="textareaDescripcion" rows="6" placeholder="Describe tu objetivo terapéutico..." maxlength="800"></textarea>
       </div>
       <div class="modal-actions">
         <button id="savePerfil" class="btn"><i class="fas fa-save"></i> Guardar</button>
@@ -352,125 +198,32 @@
     </div>
   </div>
 
-  <!-- Firebase -->
+  <!-- Firebase + Script -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
-      authDomain: "autra-digital.firebaseapp.com",
-      projectId: "autra-digital",
-      storageBucket: "autra-digital.firebasestorage.app",
-      messagingSenderId: "149401206632",
-      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
-      measurementId: "G-MEVPRYBQC1"
-    };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    // Guard: solo Paciente. Terapeuta/Admin -> dashboard avanzado; no log -> login
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) { window.location.href = './login.html'; return; }
-      try {
-        let role = null;
-        const cache = sessionStorage.getItem('autra_user');
-        if (cache) { try { role = JSON.parse(cache).role || null; } catch(_){} }
-        if (!role) {
-          const snap = await db.collection('users').doc(user.uid).get();
-          role = snap.exists ? (snap.data().role || null) : null;
-          if (role === 'Formador') role = 'Admin';
-          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
-        }
-        if (role === 'Paciente') {
-          loadProfile(user.uid);
-        } else {
-          window.location.href = (role === 'Terapeuta' || role === 'Admin') ? './dashboard_avanzado.html' : './inicio.html';
-        }
-      } catch (e) {
-        console.error('Error de guard:', e);
-        window.location.href = './inicio.html';
-      }
-    });
-
-    // Elementos
-    const fotoPerfilEl = document.getElementById('fotoPerfil');
-    const nombreEl = document.getElementById('nombreUsuario');
-    const descEl = document.getElementById('descUsuario');
-    const btnSalir = document.getElementById('btnSalir');
-
-    btnSalir.addEventListener('click', async (e) => { e.preventDefault(); try { await auth.signOut(); } finally { window.location.href = './index.html'; } });
-
-    let profileData = { description:null, photoURL:null, nombre:null };
-
-    async function loadProfile(uid){
-      try{
-        const snap = await db.collection('users').doc(uid).get();
-        const data = snap.exists ? snap.data() : {};
-        profileData = {
-          description: data.description || null,
-          photoURL: data.photoURL || null,
-          nombre: data.nombre || null,
-        };
-        nombreEl.textContent = profileData.nombre || '—';
-        descEl.textContent = profileData.description || '—';
-        if (profileData.photoURL) fotoPerfilEl.src = profileData.photoURL;
-      }catch(err){ console.error('loadProfile', err); }
-    }
-
-    // Modal Editar Perfil
-    const modalPerfil = document.getElementById('modalPerfil');
-    document.getElementById('btnEditarPerfil').addEventListener('click', ()=>{
-      document.getElementById('textareaDescripcion').value = profileData.description || '';
-      openModal('modalPerfil');
-    });
-
-    document.querySelectorAll('[data-close]').forEach(btn=> btn.addEventListener('click', (e)=> closeModal(e.currentTarget.getAttribute('data-close'))));
-
-    document.getElementById('savePerfil').addEventListener('click', async ()=>{
-      const user = auth.currentUser; if (!user) return;
-      const desc = document.getElementById('textareaDescripcion').value.trim();
-      const file = document.getElementById('inputFoto').files[0];
-      const updates = {};
-      if (desc !== profileData.description) updates.description = desc;
-      try{
-        if (file) {
-          if (file.size > 2 * 1024 * 1024) { alert('Imagen > 2MB'); return; }
-          const ref = storage.ref().child(`users/${user.uid}/avatar.jpg`);
-          await ref.put(file);
-          updates.photoURL = await ref.getDownloadURL();
-        }
-        if (Object.keys(updates).length > 0) {
-          await db.collection('users').doc(user.uid).set(updates, { merge:true });
-          profileData = { ...profileData, ...updates };
-          descEl.textContent = profileData.description || '—';
-          if (profileData.photoURL) fotoPerfilEl.src = profileData.photoURL;
-        }
-        closeModal('modalPerfil');
-        alert('Perfil actualizado');
-      }catch(err){ console.error('save profile', err); alert('Error guardando cambios'); }
-    });
-
-    function openModal(id){ document.getElementById(id).classList.add('open'); }
-    function closeModal(id){
-      const el = document.getElementById(id);
-      if (!el) return; el.classList.remove('open');
-      const fileInput = document.getElementById('inputFoto'); if (fileInput) fileInput.value = '';
-    }
-
-    // Feature flags: solo perfil activo
-    const FEATURES = { profile:true, sessions:false, messaging:false, resources:false };
-    applyFeatureFlags();
-    function applyFeatureFlags(){
-      document.querySelectorAll('[data-feature]').forEach(el=>{
-        const key = el.getAttribute('data-feature');
-        const on = !!FEATURES[key];
-        if (!on) el.classList.add('is-disabled'); else el.classList.remove('is-disabled');
-      });
-    }
+    /* Script original respetado */
+    const firebaseConfig={apiKey:"AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",authDomain:"autra-digital.firebaseapp.com",projectId:"autra-digital",storageBucket:"autra-digital.firebasestorage.app",messagingSenderId:"149401206632",appId:"1:149401206632:web:5ed11470a44b4ef648a0dd",measurementId:"G-MEVPRYBQC1"};
+    if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+    const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage();
+    auth.onAuthStateChanged(async(user)=>{if(!user){window.location.href='./login.html';return;}
+      try{let role=null;const cache=sessionStorage.getItem('autra_user');if(cache){try{role=JSON.parse(cache).role||null;}catch(_){}}if(!role){const snap=await db.collection('users').doc(user.uid).get();role=snap.exists?(snap.data().role||null):null;if(role==='Formador')role='Admin';sessionStorage.setItem('autra_user',JSON.stringify({uid:user.uid,role,ts:Date.now()}));}
+        if(role==='Paciente'){loadProfile(user.uid);}else{window.location.href=(role==='Terapeuta'||role==='Admin')?'./dashboard_avanzado.html':'./inicio.html';}}
+      catch(e){console.error('Error de guard:',e);window.location.href='./inicio.html';}});
+    const fotoPerfilEl=document.getElementById('fotoPerfil'),nombreEl=document.getElementById('nombreUsuario'),descEl=document.getElementById('descUsuario'),btnSalir=document.getElementById('btnSalir');
+    btnSalir.addEventListener('click',async(e)=>{e.preventDefault();try{await auth.signOut();}finally{window.location.href='./index.html';}});
+    let profileData={description:null,photoURL:null,nombre:null};
+    async function loadProfile(uid){try{const snap=await db.collection('users').doc(uid).get();const data=snap.exists?snap.data():{};profileData={description:data.description||null,photoURL:data.photoURL||null,nombre:data.nombre||null};nombreEl.textContent=profileData.nombre||'—';descEl.textContent=profileData.description||'—';if(profileData.photoURL)fotoPerfilEl.src=profileData.photoURL;}catch(err){console.error('loadProfile',err);}}
+    const modalPerfil=document.getElementById('modalPerfil');
+    document.getElementById('btnEditarPerfil').addEventListener('click',()=>{document.getElementById('textareaDescripcion').value=profileData.description||'';openModal('modalPerfil');});
+    document.querySelectorAll('[data-close]').forEach(btn=>btn.addEventListener('click',(e)=>closeModal(e.currentTarget.getAttribute('data-close'))));
+    document.getElementById('savePerfil').addEventListener('click',async()=>{const user=auth.currentUser;if(!user)return;const desc=document.getElementById('textareaDescripcion').value.trim();const file=document.getElementById('inputFoto').files[0];const updates={};if(desc!==profileData.description)updates.description=desc;try{if(file){if(file.size>2*1024*1024){alert('Imagen > 2MB');return;}const ref=storage.ref().child(`users/${user.uid}/avatar.jpg`);await ref.put(file);updates.photoURL=await ref.getDownloadURL();}
+      if(Object.keys(updates).length>0){await db.collection('users').doc(user.uid).set(updates,{merge:true});profileData={...profileData,...updates};descEl.textContent=profileData.description||'—';if(profileData.photoURL)fotoPerfilEl.src=profileData.photoURL;}
+      closeModal('modalPerfil');alert('Perfil actualizado');}catch(err){console.error('save profile',err);alert('Error guardando cambios');}});
+    function openModal(id){document.getElementById(id).classList.add('open');}
+    function closeModal(id){const el=document.getElementById(id);if(!el)return;el.classList.remove('open');const fileInput=document.getElementById('inputFoto');if(fileInput)fileInput.value='';}
   </script>
 </body>
 </html>
