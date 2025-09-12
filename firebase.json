@@ -1,4 +1,13 @@
 {
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      ".github/**"
+    ]
+  },
   "emulators": {
     "auth": {
       "port": 9099
