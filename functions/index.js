@@ -14,22 +14,27 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error("Webhook Error:", err.message);
+    console.error("❌ Webhook Error:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
 
-    // lo mandas desde tu checkout
+    // Identificador del usuario (lo pasamos desde el Checkout)
     const userId = session.client_reference_id;
+
+    // Número de utilizaciones compradas (definido en Checkout)
     const quantity = session.metadata.utilizaciones || 1;
 
-    await admin.firestore().collection("users").doc(userId).update({
-      utilizaciones: admin.firestore.FieldValue.increment(Number(quantity))
-    });
-
-    console.log(`✅ Utilizaciones actualizadas para ${userId}: +${quantity}`);
+    try {
+      await admin.firestore().collection("users").doc(userId).update({
+        utilizaciones: admin.firestore.FieldValue.increment(Number(quantity))
+      });
+      console.log(`✅ Utilizaciones actualizadas para ${userId}: +${quantity}`);
+    } catch (err) {
+      console.error("🔥 Error al actualizar Firestore:", err.message);
+    }
   }
 
   res.json({ received: true });
