@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda de Utilizaciones | Autra Digital</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg1:#ABC8E9; --bg2:#F9EEE0;
+      --text-strong:#545454; --text:#737373;
+      --accent:#ABC8E9; --glass-stroke:rgba(171,200,233,.35);
+      --glass:rgba(255,255,255,.12); --glass-strong:rgba(255,255,255,.22);
+      --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
+      --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
+    }
+    body{
+      margin:0; font-family:'Lato', Montserrat, system-ui, sans-serif;
+      color:var(--text);
+      background:linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100vh; display:flex; flex-direction:column;
+    }
+    header{padding:16px; border-bottom:1px solid var(--glass-stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4));
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);}
+    header h1{margin:0; font:700 1.2rem 'Montserrat', sans-serif; color:var(--text-strong)}
+    main{flex:1; max-width:900px; margin:32px auto; padding:0 18px; display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+    .card{border-radius:16px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78)); box-shadow:var(--shadow); padding:20px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px}
+    .card h2{font:700 1.1rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--glass-stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 .95rem 'Montserrat', sans-serif;
+      color:var(--text-strong); cursor:pointer; text-decoration:none}
+    .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
+    footer{text-align:center; padding:16px; font:.85rem 'Lato', sans-serif; opacity:.75}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tienda de Utilizaciones</h1>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2><i class="fas fa-circle"></i> Obtener 1 utilización</h2>
+      <button class="btn" onclick="obtenerUtilizaciones(1)"><i class="fas fa-plus"></i> Añadir 1</button>
+    </div>
+    <div class="card">
+      <h2><i class="fas fa-circle"></i> Obtener 3 utilizaciones</h2>
+      <button class="btn" onclick="obtenerUtilizaciones(3)"><i class="fas fa-plus"></i> Añadir 3</button>
+    </div>
+    <div class="card">
+      <h2><i class="fas fa-circle"></i> Obtener 5 utilizaciones</h2>
+      <button class="btn" onclick="obtenerUtilizaciones(5)"><i class="fas fa-plus"></i> Añadir 5</button>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Autra Digital
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+      authDomain: "autra-digital.firebaseapp.com",
+      projectId: "autra-digital",
+      storageBucket: "autra-digital.firebasestorage.app",
+      messagingSenderId: "149401206632",
+      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
+      measurementId: "G-MEVPRYBQC1"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Función para sumar utilizaciones
+    async function obtenerUtilizaciones(cantidad){
+      const user = auth.currentUser;
+      if (!user) { alert("Debes iniciar sesión"); return; }
+      try {
+        const ref = db.collection("users").doc(user.uid);
+        await db.runTransaction(async (tx)=>{
+          const snap = await tx.get(ref);
+          const prev = snap.exists && snap.data().utilizaciones ? snap.data().utilizaciones : 0;
+          tx.set(ref, { utilizaciones: prev + cantidad }, { merge:true });
+        });
+        alert(`¡Has obtenido ${cantidad} utilización(es)!`);
+      } catch(err){
+        console.error(err);
+        alert("Error al obtener utilizaciones");
+      }
+    }
+
+    // Autenticación simple
+    auth.onAuthStateChanged(user=>{
+      if(!user) window.location.href="./login.html";
+    });
+  </script>
+</body>
+</html>
