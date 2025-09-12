@@ -14,55 +14,45 @@
       --accent:#ABC8E9; --glass-stroke:rgba(171,200,233,.35);
       --glass:rgba(255,255,255,.12); --glass-strong:rgba(255,255,255,.22);
       --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
-      --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
     }
-    body{
-      margin:0; font-family:'Lato', Montserrat, system-ui, sans-serif;
-      color:var(--text);
+    body{margin:0; font-family:'Lato', Montserrat, system-ui, sans-serif;
       background:linear-gradient(160deg, var(--bg1), var(--bg2));
-      min-height:100vh; display:flex; flex-direction:column;
-    }
-    header{
-      padding:16px; border-bottom:1px solid var(--glass-stroke);
+      min-height:100vh; display:flex; flex-direction:column; color:var(--text);}
+    header{padding:16px; border-bottom:1px solid var(--glass-stroke);
       background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4));
-      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      display:flex; align-items:center; justify-content:space-between;
-    }
+      backdrop-filter:blur(14px); display:flex; justify-content:space-between; align-items:center;}
     header h1{margin:0; font:700 1.2rem 'Montserrat', sans-serif; color:var(--text-strong)}
     main{flex:1; max-width:600px; margin:32px auto; padding:0 18px; display:flex; justify-content:center}
     .card{border-radius:16px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78)); box-shadow:var(--shadow); padding:24px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; width:100%; max-width:400px}
-    .card h2{font:700 1.1rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
-    .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; border:1px solid var(--glass-stroke);
-      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 1rem 'Montserrat', sans-serif;
-      color:var(--text-strong); cursor:pointer; text-decoration:none}
-    .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
+    .btn{padding:12px 16px; border-radius:12px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 1rem 'Montserrat', sans-serif; cursor:pointer;}
+    input{padding:10px; border-radius:12px; border:1px solid var(--glass-stroke); text-align:center; font:1rem 'Lato', sans-serif; width:100px;}
     footer{text-align:center; padding:16px; font:.85rem 'Lato', sans-serif; opacity:.75}
   </style>
 </head>
 <body>
   <header>
     <h1>Tienda de Utilizaciones</h1>
-    <a href="https://stickershub1.github.io/AUTRA/inicio.html" class="btn"><i class="fas fa-arrow-left"></i> Volver</a>
+    <a href="./inicio.html" class="btn"><i class="fas fa-arrow-left"></i> Volver</a>
   </header>
 
   <main>
     <div class="card">
       <h2><i class="fas fa-circle"></i> Comprar utilizaciones</h2>
-      <p>Cada utilización cuesta 15 €. En el checkout podrás elegir cuántas deseas.</p>
-      <a href="https://buy.stripe.com/test_3cI8wO1zIfwefFX6dXbMQ01" target="_blank" class="btn">
-        <i class="fas fa-plus"></i> Ir al pago
-      </a>
+      <p>Cada utilización cuesta 15 €. Ingresa cuántas deseas comprar:</p>
+      <input type="number" id="cantidad" min="1" value="1" />
+      <button id="btnPagar" class="btn"><i class="fas fa-credit-card"></i> Ir al pago</button>
     </div>
   </main>
 
-  <footer>
-    © 2025 Autra Digital
-  </footer>
+  <footer>© 2025 Autra Digital</footer>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-functions.js"></script>
+  <!-- Stripe -->
+  <script src="https://js.stripe.com/v3/"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
@@ -75,17 +65,23 @@
     };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.firestore();
+    const functions = firebase.app().functions("us-central1");
 
-    // Autenticación simple: si no está logueado, redirigir a login
-    auth.onAuthStateChanged(user=>{
-      if(!user) window.location.href="./login.html";
+    const stripe = Stripe("pk_test_51S6RK8AmzmAounhDFccgSZ3fn5Ap31bxqrmZkIVbom2s6906mi394xM2nqDlTwELuwlPIlcPfOEdmjSbVaOsdjAy00matHE2WH");
+
+    document.getElementById("btnPagar").addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if (!user) return alert("Debes iniciar sesión primero");
+
+      const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
+
+      const createSession = functions.httpsCallable("createCheckoutSession");
+      const result = await createSession({ cantidad });
+      const sessionId = result.data.id;
+
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+      if (error) alert("Error al redirigir al checkout: " + error.message);
     });
-
-    // 🔹 IMPORTANTE:
-    // Aquí de momento NO se actualizan las utilizaciones en Firestore automáticamente
-    // porque el Payment Link no devuelve datos a tu frontend.
-    // Eso se hace luego con Webhooks (backend).
   </script>
 </body>
 </html>
