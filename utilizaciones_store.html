@@ -38,20 +38,13 @@
   <main>
     <div class="card">
       <h2><i class="fas fa-circle"></i> Comprar utilizaciones</h2>
-      <p>Cada utilización cuesta 15 €. En el checkout podrás elegir cuántas deseas.</p>
-      <button id="btnPagar" class="btn">
+      <p>Cada utilización cuesta 15 €. Serás redirigido a Stripe para completar el pago.</p>
+      <a href="https://buy.stripe.com/test_3cI8wO1zIfwefFX6dXbMQ01" class="btn">
         <i class="fas fa-credit-card"></i> Ir al pago
-      </button>
+      </a>
     </div>
   </main>
 
   <footer>© 2025 Autra Digital</footer>
-
-  <script>
-    document.getElementById("btnPagar").addEventListener("click", () => {
-      // 🔹 Link real de Stripe
-      window.location.href = "https://buy.stripe.com/test_3cI8wO1zIfwefFX6dXbMQ01";
-    });
-  </script>
 </body>
 </html>
