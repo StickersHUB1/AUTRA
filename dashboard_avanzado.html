@@ -388,6 +388,33 @@
         if (!on) el.classList.add('is-disabled'); else el.classList.remove('is-disabled');
       });
     }
+
+// Abrir chat Tawk
+    function openChatWithTags(){
+      if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+        try {
+          window.Tawk_API.addTags?.(['seguimiento_citas','solicitud_cita']);
+          window.Tawk_API.addEvent?.('Nueva cita desde seguimiento');
+          window.Tawk_API.maximize();
+          return;
+        } catch(_) {}
+      }
+      let tries = 0;
+      const iv = setInterval(()=>{
+        tries++;
+        if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+          try {
+            window.Tawk_API.addTags?.(['seguimiento_citas','solicitud_cita']);
+            window.Tawk_API.addEvent?.('Nueva cita desde seguimiento');
+            window.Tawk_API.maximize();
+          } catch(_) {}
+          clearInterval(iv);
+        }
+        if (tries > 30) clearInterval(iv);
+      }, 300);
+    }
+    document.getElementById('btnNuevaCita')?.addEventListener('click', openChatWithTags);
+    document.getElementById('btnRefrescar')?.addEventListener('click', (e)=>{ e.preventDefault(); openChatWithTags(); });
   </script>
 </body>
 </html>
