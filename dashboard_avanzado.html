@@ -292,6 +292,19 @@
             saldoEl.textContent = data.utilizaciones || 0;
           }
         });
+
+        // >>> Sincroniza visitante con Tawk si ya está cargado
+        window.__autraUserInfo = { uid:user.uid, email:user.email || null, role:role, nombre:null };
+        if (window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
+          try {
+            window.Tawk_API.setAttributes({
+              name: 'Usuario Autra', // se actualiza cuando tengamos nombre
+              email: user.email || undefined,
+              uid: user.uid,
+              role: role || undefined
+            }, function(){} );
+          } catch(_) {}
+        }
       } catch (e) {
         console.error('Error de guard:', e);
         window.location.href = './inicio.html';
@@ -315,6 +328,17 @@
         tonoEl.textContent = profileData.personalityTone || '—';
         descEl.textContent = profileData.description || '—';
         if (profileData.photoURL) fotoPerfilEl.src = `${profileData.photoURL}?v=${Date.now()}`;
+
+        // Si Tawk está listo, actualiza el nombre del visitante
+        if (window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
+          try {
+            window.Tawk_API.setAttributes({
+              name: profileData.nombre || 'Usuario Autra'
+            }, function(){} );
+          } catch(_) {}
+        }
+        // Guarda también en memoria para sync tardío
+        if (window.__autraUserInfo) { window.__autraUserInfo.nombre = profileData.nombre || null; }
       }catch(err){ console.error('loadProfile', err); }
     }
 
@@ -363,6 +387,11 @@
           tonoEl.textContent = profileData.personalityTone || '—';
           descEl.textContent = profileData.description || profileData.personalityDesc || '—';
           if (profileData.photoURL) fotoPerfilEl.src = `${profileData.photoURL}?v=${Date.now()}`;
+
+          // Actualiza nombre en Tawk si cambió
+          if (updates.nombre && window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
+            try { window.Tawk_API.setAttributes({ name: updates.nombre }, function(){} ); } catch(_) {}
+          }
         }
         closeModal('modalPerfil');
         alert('Perfil actualizado');
@@ -389,7 +418,7 @@
       });
     }
 
-// Abrir chat Tawk
+    // (Opcional) Handlers heredados para otras secciones; aquí no hay esos botones.
     function openChatWithTags(){
       if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
         try {
@@ -415,6 +444,41 @@
     }
     document.getElementById('btnNuevaCita')?.addEventListener('click', openChatWithTags);
     document.getElementById('btnRefrescar')?.addEventListener('click', (e)=>{ e.preventDefault(); openChatWithTags(); });
+  </script>
+
+  <!-- ===== Tawk.to (bolita de chat) ===== -->
+  <script type="text/javascript">
+    // Inicializa Tawk
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_LoadStart = new Date();
+    (function(){
+      var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/660bca27a0c6737bd12750d2/1hqf0rc1b';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+
+    // Tags y evento de página al cargar el widget
+    window.Tawk_API.onLoad = function(){
+      try {
+        window.Tawk_API.addTags?.(['perfil_terapeuta','dashboard']);
+        window.Tawk_API.addEvent?.('Perfil terapeuta abierto');
+      } catch(_) {}
+
+      // Si ya tenemos info de usuario, la sincronizamos aquí
+      if (window.__autraUserInfo && typeof window.Tawk_API.setAttributes === 'function') {
+        try {
+          window.Tawk_API.setAttributes({
+            name: (window.__autraUserInfo.nombre || 'Usuario Autra'),
+            email: window.__autraUserInfo.email || undefined,
+            uid: window.__autraUserInfo.uid,
+            role: window.__autraUserInfo.role || undefined
+          }, function(){} );
+        } catch(_) {}
+      }
+    };
   </script>
 </body>
 </html>
