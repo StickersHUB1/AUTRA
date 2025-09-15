@@ -59,7 +59,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 40px auto;
-  max-width: 900px;
+  max-width: 1100px;
   position: relative;
 }
 
@@ -71,7 +71,7 @@
   flex: 1;
 }
 
-/* círculos */
+/* círculo base */
 .phase::before {
   content: "";
   display: block;
@@ -90,7 +90,7 @@
   z-index: 2;
 }
 
-/* líneas */
+/* línea base */
 .phase::after {
   content: "";
   position: absolute;
@@ -105,7 +105,19 @@
   display: none;
 }
 
-/* fase activa */
+/* completadas (antes de la activa) */
+.phase.done::before {
+  background: #e53935;
+  border-color: #e53935;
+}
+.phase.done {
+  color: #e53935;
+}
+.phase.done::after {
+  background: #e53935;
+}
+
+/* activa (fase actual) */
 .phase.active::before {
   background: repeating-linear-gradient(
     45deg,
@@ -162,9 +174,10 @@
 
 <div class="timeline">
   <div class="phase active">Solicitud enviada</div>
-  <div class="phase">Solicitud aceptada</div>
-  <div class="phase">En proceso</div>
-  <div class="phase">Finalizada</div>
+  <div class="phase">Solicitud aceptada por Administración</div>
+  <div class="phase">Cita confirmada por Administración</div>
+  <div class="phase">Sesión agendada por Administración</div>
+  <div class="phase">Utilización confirmada</div>
 </div>
     </section>
   </main>
