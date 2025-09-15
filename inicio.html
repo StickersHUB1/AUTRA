@@ -214,54 +214,54 @@
     const btnSalir = document.getElementById('btnSalir');
 
     // Guard + resolución de rol para el botón "Perfil"
-// Deshabilitamos temporalmente el enlace hasta resolver rol
-perfilLink.setAttribute('aria-disabled','true');
-perfilLink.addEventListener('click', (e) => {
-  if (perfilLink.getAttribute('aria-disabled') === 'true' || perfilLink.getAttribute('href') === '#') {
-    e.preventDefault();
-  }
-});
+    // Deshabilitamos temporalmente el enlace hasta resolver rol
+    perfilLink.setAttribute('aria-disabled','true');
+    perfilLink.addEventListener('click', (e) => {
+      if (perfilLink.getAttribute('aria-disabled') === 'true' || perfilLink.getAttribute('href') === '#') {
+        e.preventDefault();
+      }
+    });
 
-auth.onAuthStateChanged(async (user) => {
-  if (!user) {
-    window.location.href = './login.html';
-    return;
-  }
-  try {
-    let role = null;
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = './login.html';
+        return;
+      }
+      try {
+        let role = null;
 
-    // 1) Validar que la caché pertenece a ESTE usuario
-    let cached = null;
-    const cacheStr = sessionStorage.getItem('autra_user');
-    if (cacheStr) {
-      try { cached = JSON.parse(cacheStr); } catch(_) {}
-    }
-    if (cached && cached.uid === user.uid && cached.role) {
-      role = cached.role;
-    }
+        // 1) Validar que la caché pertenece a ESTE usuario
+        let cached = null;
+        const cacheStr = sessionStorage.getItem('autra_user');
+        if (cacheStr) {
+          try { cached = JSON.parse(cacheStr); } catch(_) {}
+        }
+        if (cached && cached.uid === user.uid && cached.role) {
+          role = cached.role;
+        }
 
-    // 2) Si no hay rol válido en caché, leer Firestore y normalizar
-    if (!role) {
-      const snap = await db.collection('users').doc(user.uid).get();
-      const raw = snap.exists ? (snap.data().role ?? null) : null;
-      role = normalizeRole(raw);
-      sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
-    }
+        // 2) Si no hay rol válido en caché, leer Firestore y normalizar
+        if (!role) {
+          const snap = await db.collection('users').doc(user.uid).get();
+          const raw = snap.exists ? (snap.data().role ?? null) : null;
+          role = normalizeRole(raw);
+          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
+        }
 
-    // 3) Destino dinámico del perfil
-    let dest = './dashboard_basico.html'; // por defecto, paciente
-    if (role === 'Terapeuta' || role === 'Admin') dest = './dashboard_avanzado.html';
-    else if (role === 'Paciente') dest = './dashboard_basico.html';
+        // 3) Destino dinámico del perfil
+        let dest = './dashboard_basico.html'; // por defecto, paciente
+        if (role === 'Terapeuta' || role === 'Admin') dest = './dashboard_avanzado.html';
+        else if (role === 'Paciente') dest = './dashboard_basico.html';
 
-    perfilLink.href = dest;
-    perfilLink.removeAttribute('aria-disabled');
-  } catch (err) {
-    console.error('Error resolviendo rol:', err);
-    sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role:null, ts:Date.now() }));
-    perfilLink.href = './dashboard_basico.html';
-    perfilLink.removeAttribute('aria-disabled');
-  }
-});
+        perfilLink.href = dest;
+        perfilLink.removeAttribute('aria-disabled');
+      } catch (err) {
+        console.error('Error resolviendo rol:', err);
+        sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role:null, ts:Date.now() }));
+        perfilLink.href = './dashboard_basico.html';
+        perfilLink.removeAttribute('aria-disabled');
+      }
+    });
 
     btnSalir.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -270,6 +270,73 @@ auth.onAuthStateChanged(async (user) => {
 
     // NOTA: El feed actual usa plantillas estáticas. 
     // Cuando tengas la colección (p.ej. therapists), aquí haces un fetch y renderizas.
+  </script>
+
+  <!-- ===== Tawk.to (bolita de chat) ===== -->
+  <script type="text/javascript">
+    // Inicializa Tawk (mismo ID que usas en otras páginas)
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_LoadStart = new Date();
+    (function(){
+      var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/660bca27a0c6737bd12750d2/1hqf0rc1b';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+
+    // Tags y evento cuando el widget está listo
+    window.Tawk_API.onLoad = function(){
+      try {
+        window.Tawk_API.addTags?.(['inicio','home']);
+        window.Tawk_API.addEvent?.('Inicio abierto');
+      } catch(_) {}
+
+      // Si ya sabemos del usuario, sincroniza atributos
+      if (window.__autraUserInfo && typeof window.Tawk_API.setAttributes === 'function') {
+        try {
+          window.Tawk_API.setAttributes({
+            name: (window.__autraUserInfo.nombre || 'Usuario Autra'),
+            email: window.__autraUserInfo.email || undefined,
+            uid: window.__autraUserInfo.uid,
+            role: window.__autraUserInfo.role || undefined
+          }, function(){} );
+        } catch(_) {}
+      }
+    };
+  </script>
+
+  <!-- ===== Sync de usuario con Tawk (sin tocar tu lógica existente) ===== -->
+  <script>
+    // Listener adicional SOLO para pasar los datos a Tawk si procede (no altera tu guard original)
+    auth.onAuthStateChanged(function(user){
+      if (!user) {
+        window.__autraUserInfo = null;
+        return;
+      }
+      // Lee rol cacheado si existe (ya lo generas arriba)
+      let role = null;
+      try {
+        const cacheStr = sessionStorage.getItem('autra_user');
+        if (cacheStr) role = (JSON.parse(cacheStr).role || null);
+      } catch(_){}
+
+      // Guarda info mínima para onLoad tardío
+      window.__autraUserInfo = { uid:user.uid, email:user.email || null, role:role || null, nombre:null };
+
+      // Si el widget ya está listo, pasa atributos ahora
+      if (window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
+        try {
+          window.Tawk_API.setAttributes({
+            name: 'Usuario Autra',
+            email: user.email || undefined,
+            uid: user.uid,
+            role: role || undefined
+          }, function(){} );
+        } catch(_) {}
+      }
+    });
   </script>
 </body>
 </html>
