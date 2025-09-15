@@ -105,7 +105,7 @@
   display: none;
 }
 
-/* completadas (antes de la activa) */
+/* completadas */
 .phase.done::before {
   background: #e53935;
   border-color: #e53935;
@@ -117,7 +117,7 @@
   background: #e53935;
 }
 
-/* activa (fase actual) */
+/* activa */
 .phase.active::before {
   background: repeating-linear-gradient(
     45deg,
@@ -257,6 +257,20 @@ s1.charset='UTF-8';
 s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
+
+// ===== CONTROL DEL TIMELINE =====
+// faseActual: número del 1 al 5
+const faseActual = 3; // <-- cámbialo según el estado real
+
+const fases = document.querySelectorAll('.timeline .phase');
+fases.forEach((fase, i) => {
+  const paso = i + 1;
+  if (paso < faseActual) {
+    fase.classList.add('done');
+  } else if (paso === faseActual) {
+    fase.classList.add('active');
+  }
+});
 </script>
 <!--End of Tawk.to Script-->
 </body>
