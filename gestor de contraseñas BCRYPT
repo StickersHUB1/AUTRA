@@ -1,0 +1,82 @@
+// functions/stripeWebhook.js
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import express from "express";
+import bodyParser from "body-parser";
+import Stripe from "stripe";
+
+admin.initializeApp();
+const db = admin.firestore();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2022-11-15" });
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+const app = express();
+// raw body is required to verify signature
+app.post("/webhook", bodyParser.raw({ type: "application/json" }), async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error("Firma stripe inválida", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Procesar solo eventos relevantes (ej: payment_intent.succeeded)
+  if (event.type === "checkout.session.completed" || event.type === "payment_intent.succeeded") {
+    const data = event.data.object;
+
+    // Ejemplo: uid y cantidad deben venir en metadata al crear la sesión de checkout
+    const uid = data.metadata?.uid;
+    const cantidad = parseInt(data.metadata?.utilizaciones || "0", 10);
+    const stripeEventId = event.id;
+
+    if (!uid || cantidad <= 0) {
+      console.warn("Webhook sin metadata correcta", { uid, cantidad });
+      return res.status(200).send(); // acepta pero no procesa
+    }
+
+    // Idempotencia: guarda un doc con el stripeEventId antes de aplicar
+    const idempotencyRef = db.collection("idempotencia_stripe").doc(stripeEventId);
+    const userRef = db.collection("usuarios").doc(uid);
+    const movimientosRef = db.collection("movimientos");
+
+    try {
+      await db.runTransaction(async (t) => {
+        const idSnap = await t.get(idempotencyRef);
+        if (idSnap.exists) {
+          // ya procesado
+          return;
+        }
+
+        // marcar como procesado
+        t.set(idempotencyRef, { processed: true, createdAt: admin.firestore.FieldValue.serverTimestamp() });
+
+        // incrementar wallet
+        t.update(userRef, {
+          utilizaciones: admin.firestore.FieldValue.increment(cantidad),
+        });
+
+        // registrar movimiento
+        t.set(movimientosRef.doc(), {
+          uid,
+          tipo: "compra",
+          cantidad,
+          origen: "stripe",
+          stripeEventId,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+      });
+
+      return res.status(200).send({ received: true });
+    } catch (err) {
+      console.error("Error procesando webhook:", err);
+      return res.status(500).send();
+    }
+  }
+
+  // eventos no relevantes
+  res.status(200).send({ received: true });
+});
+
+export const stripeWebhook = functions.https.onRequest(app);
