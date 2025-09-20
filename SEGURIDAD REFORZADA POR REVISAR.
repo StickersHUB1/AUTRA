@@ -1,0 +1,30 @@
+export const consumirUtilizacion = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError("unauthenticated", "Debes iniciar sesión");
+  }
+
+  const uid = context.auth.uid;
+  const ip = context.rawRequest.headers["x-forwarded-for"] || context.rawRequest.ip;
+
+  await db.runTransaction(async (t) => {
+    const userRef = db.collection("usuarios").doc(uid);
+    const snap = await t.get(userRef);
+    const actuales = snap.data().utilizaciones || 0;
+
+    if (actuales <= 0) {
+      throw new functions.https.HttpsError("failed-precondition", "Sin saldo");
+    }
+
+    t.update(userRef, { utilizaciones: admin.firestore.FieldValue.increment(-1) });
+
+    t.set(db.collection("movimientos").doc(), {
+      uid,
+      tipo: "consumo",
+      cantidad: -1,
+      ip,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+  });
+
+  return { ok: true, mensaje: "Consumo registrado con IP" };
+});
