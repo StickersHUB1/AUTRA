@@ -31,7 +31,7 @@
     .orb.one{width:420px;height:420px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); top:-120px; right:-80px}
     .orb.two{width:520px;height:520px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); bottom:-140px; left:-120px}
 
-    /* Topbar unificado */
+    /* Topbar */
     .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%); -webkit-backdrop-filter:blur(14px) saturate(120%);
       background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4)); border-bottom:1px solid var(--glass-stroke);
       box-shadow:0 8px 30px rgba(0,0,0,.06)}
@@ -47,14 +47,14 @@
 
     .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
 
-    /* Layout principal */
+    /* Layout */
     .layout{display:flex; gap:20px; flex-wrap:wrap; justify-content:space-between}
     .left-panel,.right-panel{backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
       background:var(--glass); border:1px solid var(--glass-stroke); border-radius:16px; box-shadow:var(--shadow); padding:16px}
     .left-panel{flex:2; min-width:560px}
     .right-panel{flex:1; min-width:300px; display:flex; flex-direction:column; align-items:center}
 
-    /* Perfil (disponible) */
+    /* Perfil */
     .foto-perfil{width:120px; height:120px; border-radius:50%; object-fit:cover; margin-bottom:12px; border:1px solid var(--glass-stroke); box-shadow:var(--shadow); background:#fff}
     .nombre{font:700 1.15rem 'Montserrat', sans-serif; color:var(--text-strong); margin:2px 0 6px}
     .especialidad,.personalidad{font-size:.95rem; color:var(--text)}
@@ -64,66 +64,33 @@
     .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
 
     /* Wireframe pacientes */
+    .patient-list { display:flex; flex-direction:column; gap:16px; margin-top:12px; }
     .patient-card {
       background: var(--glass-strong);
       border: 1px solid var(--glass-stroke);
       border-radius: 12px;
       padding: 16px;
-      margin-top: 12px;
       box-shadow: 0 8px 24px rgba(0,0,0,.08);
     }
-    .patient-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
+    .patient-header { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
     .patient-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: #ddd;
-      border: 1px solid var(--glass-stroke);
-      flex-shrink: 0;
+      width:56px; height:56px; border-radius:50%; background:#ddd;
+      border:1px solid var(--glass-stroke); flex-shrink:0;
     }
-    .patient-info { display:flex; flex-direction:column; gap:6px }
-    .patient-name {
-      font: 700 1rem 'Montserrat', sans-serif;
-      color: var(--text-strong);
-      margin: 0;
-    }
+    .patient-info { display:flex; flex-direction:column; gap:6px; }
+    .patient-name { font:700 1rem 'Montserrat', sans-serif; color:var(--text-strong); margin:0; }
     .profile-code {
-      font: 600 .85rem 'Lato', sans-serif;
-      color: var(--accent);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      text-align: left;
-      padding: 0;
+      font:600 .85rem 'Lato', sans-serif; color:var(--accent);
+      background:transparent; border:none; cursor:pointer; text-align:left; padding:0;
     }
-    .patient-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      font-size: .9rem;
-      margin: 10px 0;
-    }
-    .patient-meta strong { color: var(--text-strong) }
-    .patient-timeline { margin-top: 14px }
-    .timeline-header {
-      display:flex; justify-content:space-between; align-items:center;
-      font:600 .9rem 'Montserrat', sans-serif; margin-bottom:8px;
-    }
-    .timeline {
-      display:flex; flex-wrap:wrap; gap:6px;
-    }
+    .patient-meta { display:flex; flex-wrap:wrap; gap:16px; font-size:.9rem; margin:10px 0; }
+    .patient-meta strong{ color:var(--text-strong); }
+    .timeline-header{ display:flex; justify-content:space-between; align-items:center; font:600 .9rem 'Montserrat', sans-serif; margin-bottom:8px; }
+    .timeline{ display:flex; flex-wrap:wrap; gap:6px; }
     .timeline .step {
-      flex:1; min-width:90px;
-      background:var(--glass);
-      border:1px solid var(--glass-stroke);
-      border-radius:8px;
-      padding:8px; text-align:center;
-      font-size:.8rem; color:var(--text);
+      flex:1; min-width:90px; background:var(--glass);
+      border:1px solid var(--glass-stroke); border-radius:8px;
+      padding:8px; text-align:center; font-size:.8rem; color:var(--text);
     }
 
     @media (max-width: 768px){
@@ -150,7 +117,7 @@
   <div class="orb one" aria-hidden="true"></div>
   <div class="orb two" aria-hidden="true"></div>
 
-  <!-- Topbar unificado -->
+  <!-- Topbar -->
   <header class="topbar" role="banner">
     <div class="container">
       <a class="brand" href="./inicio.html" aria-label="Autra Digital">
@@ -173,47 +140,46 @@
       <!-- Panel izquierdo: Pacientes -->
       <div class="left-panel" data-feature="patients">
         <div class="top-left-info">Número de utilizaciones: <strong id="uso-total">—</strong></div>
-
-        <!-- 🔹 Wireframe paciente -->
-        <div class="patient-card">
-          <div class="patient-header">
-            <div class="patient-avatar"></div>
-            <div class="patient-info">
-              <h3 class="patient-name">—</h3>
-              <button class="profile-code">🔒 Ver código de perfil</button>
+        <div id="patient-list" class="patient-list">
+          <!-- Card vacía por defecto -->
+          <div class="patient-card">
+            <div class="patient-header">
+              <div class="patient-avatar"></div>
+              <div class="patient-info">
+                <h3 class="patient-name">—</h3>
+                <button class="profile-code">🔒 Ver código de perfil</button>
+              </div>
             </div>
-          </div>
-          <div class="patient-meta">
-            <span>Sesiones: <strong>—</strong></span>
-            <span>Programa AUTRA: <strong>—</strong></span>
-            <span>Próxima cita: <strong>—</strong></span>
-          </div>
-          <div class="patient-timeline">
-            <div class="timeline-header">
-              <span>Hilo visual</span>
-              <button class="toggle-timeline">[Ocultar / Mostrar]</button>
+            <div class="patient-meta">
+              <span>Sesiones: <strong>—</strong></span>
+              <span>Programa AUTRA: <strong>—</strong></span>
+              <span>Próxima cita: <strong>—</strong></span>
             </div>
-            <div class="timeline">
-              <div class="step">Solicitud</div>
-              <div class="step">Acept. Adm.</div>
-              <div class="step">Val. Ter.</div>
-              <div class="step">Confirmada</div>
-              <div class="step">Agendada</div>
-              <div class="step">Utilizada</div>
+            <div class="patient-timeline">
+              <div class="timeline-header">
+                <span>Hilo visual</span>
+                <button class="toggle-timeline">[Ocultar / Mostrar]</button>
+              </div>
+              <div class="timeline">
+                <div class="step">Solicitud</div>
+                <div class="step">Acept. Adm.</div>
+                <div class="step">Val. Ter.</div>
+                <div class="step">Confirmada</div>
+                <div class="step">Agendada</div>
+                <div class="step">Utilizada</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Panel derecho: Perfil (disponible) -->
+      <!-- Panel derecho: Perfil (igual que antes) -->
       <div class="right-panel">
         <img id="fotoPerfil" class="foto-perfil" alt="Foto de perfil" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><circle cx='60' cy='60' r='60' fill='%23f2f2f2'/><circle cx='60' cy='46' r='22' fill='%23d9d9d9'/><path d='M20 108c8-24 36-32 40-32s34 8 40 32' fill='%23d9d9d9'/></svg>">
         <h2 id="nombreUsuario" class="nombre">—</h2>
         <div class="especialidad">Especialidad: <span id="especialidadText">—</span></div>
         <div class="personalidad">Personalidad: <strong id="tonoPersonalidad">—</strong></div>
         <p id="descPersonalidad" class="descripcion">—</p>
-
-        <!-- Monedero de utilizaciones -->
         <div class="saldo-utilizaciones">
           <i class="fas fa-wallet"></i>
           Utilizaciones disponibles: <strong id="saldo-utilizaciones">0</strong>
@@ -221,12 +187,9 @@
         <div class="actions">
           <a href="utilizaciones_store.html" class="btn"><i class="fas fa-plus-circle"></i> Obtener utilizaciones</a>
         </div>
-
         <div class="actions">
           <button id="btnEditarPerfil" class="btn"><i class="fas fa-user-cog"></i> Editar perfil</button>
         </div>
-
-        <!-- Bloques de reseñas/comentarios (en obras) -->
         <div class="is-disabled" data-feature="reviews" style="margin-top:16px; width:100%">
           <div class="block-overlay" role="status" aria-live="polite">
             <div class="overlay-badge">🚧 En obras · Reseñas y valoraciones 🛠</div>
@@ -235,7 +198,7 @@
           <div class="nota-media">Nota media: <strong>—</strong></div>
           <div class="comentarios-container">
             <h3 class="comentarios-titulo">Comentarios (<span id="comment-count">0</span>)</h3>
-            <div id="comentarios-list"><!-- vacío --></div>
+            <div id="comentarios-list"></div>
           </div>
         </div>
       </div>
@@ -246,13 +209,49 @@
     © 2025 Autra Digital
   </footer>
 
+  <!-- Modal Perfil -->
+  <div id="modalPerfil" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalPerfilTitle">
+      <button class="modal-close" aria-label="Cerrar" data-close="modalPerfil">×</button>
+      <h3 id="modalPerfilTitle">Editar perfil</h3>
+      <div class="field">
+        <label for="inputFoto">Foto de perfil (opcional)</label>
+        <input id="inputFoto" type="file" accept="image/*" />
+      </div>
+      <div class="field">
+        <label for="inputEspecialidad">Especialidad</label>
+        <input id="inputEspecialidad" type="text" placeholder="Ej. Terapia Cognitivo-Conductual" maxlength="60" />
+      </div>
+      <div class="field">
+        <label for="selectTono">Tono</label>
+        <select id="selectTono">
+          <option value="Empático">Empático</option>
+          <option value="Firme">Firme</option>
+          <option value="Neutral">Neutral</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="textareaPersonalidad">Descripción de personalidad</label>
+        <textarea id="textareaPersonalidad" rows="5" maxlength="800"></textarea>
+      </div>
+      <div class="field">
+        <label for="textareaDescripcion">Descripción (bio)</label>
+        <textarea id="textareaDescripcion" rows="6" maxlength="1000"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button id="savePerfil" class="btn"><i class="fas fa-save"></i> Guardar</button>
+        <button class="btn" data-close="modalPerfil"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <script>
-    // Config & init
+    // Config
     const firebaseConfig = {
       apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
       authDomain: "autra-digital.firebaseapp.com",
@@ -267,18 +266,20 @@
     const db = firebase.firestore();
     const storage = firebase.storage();
 
+    // UI
     const fotoPerfilEl = document.getElementById('fotoPerfil');
     const nombreEl = document.getElementById('nombreUsuario');
     const especialidadText = document.getElementById('especialidadText');
     const tonoEl = document.getElementById('tonoPersonalidad');
     const descEl = document.getElementById('descPersonalidad');
     const saldoEl = document.getElementById('saldo-utilizaciones');
+    const patientList = document.getElementById('patient-list');
 
     const btnSalir = document.getElementById('btnSalir');
-    btnSalir.addEventListener('click', async (e) => { 
-      e.preventDefault(); 
-      try { await auth.signOut(); } 
-      finally { window.location.href = './index.html'; } 
+    btnSalir.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await auth.signOut(); }
+      finally { window.location.href = './index.html'; }
     });
 
     let profileData = { specialty:null, personalityTone:null, personalityDesc:null, description:null, photoURL:null, nombre:null };
@@ -299,27 +300,17 @@
           window.location.href = './inicio.html';
           return;
         }
+        // Perfil
         loadProfile(user.uid);
+        // Utilizaciones
         db.collection('users').doc(user.uid).onSnapshot((doc)=>{
           if (doc.exists){
-            const data = doc.data
             const data = doc.data();
             saldoEl.textContent = data.utilizaciones || 0;
           }
         });
-
-        // Sync con Tawk
-        window.__autraUserInfo = { uid:user.uid, email:user.email || null, role:role, nombre:null };
-        if (window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
-          try {
-            window.Tawk_API.setAttributes({
-              name: 'Usuario Autra',
-              email: user.email || undefined,
-              uid: user.uid,
-              role: role || undefined
-            }, function(){} );
-          } catch(_) {}
-        }
+        // Placeholder pacientes
+        // (cuando haya pacientes, aquí se hará query y se pintarán dinámicamente en #patient-list)
       } catch (e) {
         console.error('Error de guard:', e);
         window.location.href = './inicio.html';
@@ -343,27 +334,22 @@
         tonoEl.textContent = profileData.personalityTone || '—';
         descEl.textContent = profileData.description || '—';
         if (profileData.photoURL) fotoPerfilEl.src = `${profileData.photoURL}?v=${Date.now()}`;
-
-        if (window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
-          try { window.Tawk_API.setAttributes({ name: profileData.nombre || 'Usuario Autra' }, function(){} ); } catch(_) {}
-        }
-        if (window.__autraUserInfo) { window.__autraUserInfo.nombre = profileData.nombre || null; }
       }catch(err){ console.error('loadProfile', err); }
     }
 
-    // ===== Modal Editar Perfil =====
+    // Modal
     const modalPerfil = document.getElementById('modalPerfil');
     document.getElementById('btnEditarPerfil').addEventListener('click', ()=>{
       document.getElementById('inputEspecialidad').value = profileData.specialty || '';
       document.getElementById('selectTono').value = profileData.personalityTone || 'Empático';
       document.getElementById('textareaPersonalidad').value = profileData.personalityDesc || '';
-      document.getElementById('textareaDescripcion').value = 
-        (profileData.description && profileData.description !== profileData.personalityDesc) 
+      document.getElementById('textareaDescripcion').value =
+        (profileData.description && profileData.description !== profileData.personalityDesc)
         ? profileData.description : '';
       openModal('modalPerfil');
     });
 
-    document.querySelectorAll('[data-close]').forEach(btn=> 
+    document.querySelectorAll('[data-close]').forEach(btn=>
       btn.addEventListener('click', (e)=> closeModal(e.currentTarget.getAttribute('data-close')))
     );
 
@@ -396,17 +382,12 @@
           tonoEl.textContent = profileData.personalityTone || '—';
           descEl.textContent = profileData.description || profileData.personalityDesc || '—';
           if (profileData.photoURL) fotoPerfilEl.src = `${profileData.photoURL}?v=${Date.now()}`;
-
-          if (updates.nombre && window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
-            try { window.Tawk_API.setAttributes({ name: updates.nombre }, function(){} ); } catch(_) {}
-          }
         }
         closeModal('modalPerfil');
         alert('Perfil actualizado');
       }catch(err){ console.error('save profile', err); alert('Error guardando cambios'); }
     });
 
-    // Utilidades modales
     function openModal(id){ document.getElementById(id).classList.add('open'); }
     function closeModal(id){
       const el = document.getElementById(id);
@@ -415,45 +396,19 @@
       const fileInput = document.getElementById('inputFoto');
       if (fileInput) fileInput.value = '';
     }
+
+    const FEATURES = { profile:true, patients:true, reviews:false };
+    applyFeatureFlags();
+    function applyFeatureFlags(){
+      document.querySelectorAll('[data-feature]').forEach(el=>{
+        const key = el.getAttribute('data-feature');
+        const on = !!FEATURES[key];
+        if (!on) el.classList.add('is-disabled'); else el.classList.remove('is-disabled');
+      });
+    }
   </script>
 
-  <!-- ===== Modal Editar Perfil ===== -->
-  <div id="modalPerfil" class="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalPerfilTitle">
-      <button class="modal-close" aria-label="Cerrar" data-close="modalPerfil">×</button>
-      <h3 id="modalPerfilTitle">Editar perfil</h3>
-      <div class="field">
-        <label for="inputFoto">Foto de perfil (opcional)</label>
-        <input id="inputFoto" type="file" accept="image/*" />
-      </div>
-      <div class="field">
-        <label for="inputEspecialidad">Especialidad</label>
-        <input id="inputEspecialidad" type="text" placeholder="Ej. Terapia Cognitivo-Conductual" maxlength="60" />
-      </div>
-      <div class="field">
-        <label for="selectTono">Tono</label>
-        <select id="selectTono">
-          <option value="Empático">Empático</option>
-          <option value="Firme">Firme</option>
-          <option value="Neutral">Neutral</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="textareaPersonalidad">Descripción de personalidad</label>
-        <textarea id="textareaPersonalidad" rows="5" placeholder="Describe tu estilo de trabajo..." maxlength="800"></textarea>
-      </div>
-      <div class="field">
-        <label for="textareaDescripcion">Descripción (bio)</label>
-        <textarea id="textareaDescripcion" rows="6" placeholder="Cuéntanos sobre tu experiencia, enfoque y servicios..." maxlength="1000"></textarea>
-      </div>
-      <div class="modal-actions">
-        <button id="savePerfil" class="btn"><i class="fas fa-save"></i> Guardar</button>
-        <button class="btn" data-close="modalPerfil"><i class="fas fa-times"></i> Cerrar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== Tawk.to ===== -->
+  <!-- Tawk -->
   <script type="text/javascript">
     window.Tawk_API = window.Tawk_API || {};
     window.Tawk_LoadStart = new Date();
@@ -465,23 +420,6 @@
       s1.setAttribute('crossorigin','*');
       s0.parentNode.insertBefore(s1,s0);
     })();
-
-    window.Tawk_API.onLoad = function(){
-      try {
-        window.Tawk_API.addTags?.(['perfil_terapeuta','dashboard']);
-        window.Tawk_API.addEvent?.('Perfil terapeuta abierto');
-      } catch(_) {}
-      if (window.__autraUserInfo && typeof window.Tawk_API.setAttributes === 'function') {
-        try {
-          window.Tawk_API.setAttributes({
-            name: (window.__autraUserInfo.nombre || 'Usuario Autra'),
-            email: window.__autraUserInfo.email || undefined,
-            uid: window.__autraUserInfo.uid,
-            role: window.__autraUserInfo.role || undefined
-          }, function(){} );
-        } catch(_) {}
-      }
-    };
   </script>
 </body>
 </html>
