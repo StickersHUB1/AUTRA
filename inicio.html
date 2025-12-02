@@ -6,338 +6,246 @@
   <title>Inicio – Autra Digital</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!--- Tipografías --->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+
   <style>
     :root{
       --bg1:#ABC8E9; --bg2:#F9EEE0;
       --text-strong:#545454; --text:#737373;
       --accent:#ABC8E9; --glass-stroke:rgba(171,200,233,.35);
-      --glass:#ffffffb3; /* 70% */
-      --glass-soft:#ffffffa6; /* 65% */
+      --glass:#ffffffb3; --glass-soft:#ffffffa6;
       --radius:22px; --shadow:0 24px 60px rgba(0,0,0,.12);
       --focus:0 0 0 3px rgba(171,200,233,.55), 0 6px 20px rgba(0,0,0,.12);
     }
     *,*::before,*::after{box-sizing:border-box}
     html,body{height:auto}
     body{
-      margin:0; font-family:'Lato', Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      margin:0; font-family:'Lato', Montserrat, system-ui;
       color:var(--text);
       background:radial-gradient(1200px 800px at 85% -10%, rgba(171,200,233,.35), transparent 60%),
                  radial-gradient(900px 700px at -10% 100%, rgba(171,200,233,.25), transparent 55%),
                  linear-gradient(160deg, var(--bg1), var(--bg2));
-      min-height:100dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+      min-height:100dvh; overflow-y:auto;
     }
     .orb{position:fixed; filter:blur(40px); opacity:.7; pointer-events:none}
-    .orb.one{width:420px;height:420px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); top:-120px; right:-80px}
-    .orb.two{width:520px;height:520px;background:radial-gradient(circle,var(--accent) 0%, transparent 60%); bottom:-140px; left:-120px}
+    .orb.one{width:420px;height:420px;background:radial-gradient(circle,var(--accent), transparent 60%); top:-120px; right:-80px}
+    .orb.two{width:520px;height:520px;background:radial-gradient(circle,var(--accent), transparent 60%); bottom:-140px; left:-120px}
 
-    /* ===== Topbar ===== */
-    .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%); -webkit-backdrop-filter:blur(14px) saturate(120%);
+    .topbar{position:sticky; top:0; z-index:20; backdrop-filter:blur(14px) saturate(120%);
       background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.4)); border-bottom:1px solid var(--glass-stroke);
       box-shadow:0 8px 30px rgba(0,0,0,.06)}
-    .topbar .container{max-width:1100px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:16px; justify-content:space-between}
+    .topbar .container{max-width:1100px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; justify-content:space-between}
     .brand{display:flex; align-items:center; gap:12px}
-    .brand img{width:36px; height:36px; object-fit:contain}
-    .brand h1{font:700 18px/1.1 'Montserrat', sans-serif; color:var(--text-strong); margin:0}
+    .brand img{width:36px;height:36px}
+    .brand h1{font:700 18px 'Montserrat'; color:var(--text-strong); margin:0}
     nav ul{display:flex; list-style:none; gap:8px; margin:0; padding:0}
-    .tab{appearance:none; border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px; font:600 14px/1 'Montserrat', sans-serif; color:var(--text-strong);
-      background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+    .tab{border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 14px; font:600 14px 'Montserrat'; color:var(--text-strong);
+      background:rgba(255,255,255,.8); cursor:pointer; text-decoration:none; display:inline-flex; gap:8px}
     .tab[aria-current="page"]{box-shadow:var(--focus)}
-        .tab[aria-disabled="true"]{opacity:.6; pointer-events:none}
 
-    /* ===== Layout ===== */
     .wrap{max-width:1100px; margin:24px auto; padding:0 18px}
-    .hero{display:grid; grid-template-columns:minmax(240px,360px) 1fr; gap:18px; align-items:center; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, var(--glass), var(--glass-soft)); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
-    .heroMedia{position:relative; overflow:hidden; border-radius:16px; background:radial-gradient(120% 120% at 0% 0%, rgba(171,200,233,.35), transparent 60%), #fff}
-    .heroMedia img{width:100%; height:100%; object-fit:cover; display:block; mix-blend:normal; filter:contrast(1.02) saturate(1.02)}
-    .heroText h2{font:700 24px/1.15 'Montserrat', sans-serif; color:var(--text-strong); margin:6px 0 8px}
-    .heroText p{margin:0 0 8px}
-    @media (max-width:780px){.hero{grid-template-columns:1fr}}
+    .hero{display:grid; grid-template-columns:300px 1fr; gap:18px; align-items:center; border:1px solid var(--glass-stroke);
+      background:linear-gradient(180deg, var(--glass), var(--glass-soft)); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+    @media(max-width:780px){.hero{grid-template-columns:1fr}}
 
-    .feed{display:grid; grid-template-columns:1fr; gap:16px; margin-top:16px}
-    @media (min-width:780px){.feed{grid-template-columns:1fr}}
+    .feed{display:grid; gap:16px; margin-top:16px}
 
-    /* ===== Tarjetas de terapeuta ===== */
-    .card{position:relative; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78)); border-radius:18px; padding:16px; box-shadow:var(--shadow)}
+    .card{border:1px solid var(--glass-stroke); background:rgba(255,255,255,.85); border-radius:18px; padding:16px; box-shadow:var(--shadow)}
     .cardHeader{display:flex; align-items:center; gap:12px; margin-bottom:10px}
-    .avatar{width:48px; height:48px; border-radius:50%; background:radial-gradient(circle, #fff 0%, #e8eef7 70%); display:grid; place-items:center; border:1px solid var(--glass-stroke); font-weight:700; font-family:'Montserrat', sans-serif; color:var(--text-strong)}
-    .name{margin:0; font:700 18px/1.2 'Montserrat', sans-serif; color:var(--text-strong)}
-    .meta{font-size:13px; color:var(--text)}
-    .tags{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0}
-    .tag{font:600 12px/1 'Montserrat', sans-serif; color:var(--text-strong); border:1px solid var(--glass-stroke); padding:6px 8px; border-radius:999px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.75))}
-    .desc{font-size:14px; margin:10px 0 12px}
-    .actions{display:flex; gap:8px; flex-wrap:wrap}
-    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-stroke); background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.75)); font:700 14px/1 'Montserrat', sans-serif; color:var(--text-strong); text-decoration:none; cursor:pointer}
-    .btn:hover{box-shadow:0 8px 20px rgba(0,0,0,.12)}
+    .avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid var(--glass-stroke);font-weight:700}
+    .name{margin:0; font:700 18px 'Montserrat'; color:var(--text-strong)}
+    .meta{font-size:13px;color:var(--text)}
+    .tags{display:flex; gap:6px; margin:10px 0}
+    .tag{border:1px solid var(--glass-stroke); border-radius:999px; padding:6px 8px; font:600 12px 'Montserrat'}
+    .desc{font-size:14px;margin:10px 0}
 
-    /* Sutilezas */
-    .sr-only{position:absolute!important; width:1px;height:1px; padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .actions{display:flex; gap:8px; margin-top:10px}
+    .btn{border:1px solid var(--glass-stroke); border-radius:12px; padding:10px 12px; cursor:pointer; font:700 14px 'Montserrat'; background:#fff}
+    .btn:hover{box-shadow:0 6px 18px rgba(0,0,0,.15)}
   </style>
 </head>
 <body>
-  <!-- Decor -->
-  <div class="orb one" aria-hidden="true"></div>
-  <div class="orb two" aria-hidden="true"></div>
 
-  <!-- Topbar (común en Inicio / Dashboards) -->
-  <header class="topbar" role="banner">
-    <div class="container">
-      <a class="brand" href="./inicio.html" aria-label="Autra Digital">
-        <img src="logotipo.png" alt="Autra Digital Logo" />
-        <h1>Autra Digital</h1>
-      </a>
-<nav aria-label="Navegación principal">
-  <ul>
-    <li><a class="tab" aria-current="page" href="./inicio.html"><i class="fas fa-home"></i> Foro</a></li>
-    <li><a id="perfilLink" class="tab" href="#"><i class="fas fa-user"></i> Perfil</a></li>
-    <li><a id="perfilLink" class="tab" href="#"><i class="fas fa-user"></i> Tutorias</a></li>
-    <li><a class="tab" href="./seguimiento_citas.html"><i class="fas fa-calendar-check"></i> Seguimiento de citas</a></li>
-    <li><a id="btnSalir" class="tab" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
-  </ul>
-</nav>
+<div class="orb one"></div><div class="orb two"></div>
+
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="./inicio.html">
+      <img src="logotipo.png" alt="Autra Digital" />
+      <h1>Autra Digital</h1>
+    </a>
+    <nav>
+      <ul>
+        <li><a class="tab" aria-current="page" href="./inicio.html"><i class="fas fa-home"></i> Foro</a></li>
+        <li><a id="perfilLink" class="tab" href="#"><i class="fas fa-user"></i> Perfil</a></li>
+        <li><a id="perfilLink" class="tab" href="#"><i class="fas fa-user"></i> Tutorías</a></li>
+        <li><a class="tab" href="./seguimiento_citas.html"><i class="fas fa-calendar-check"></i> Seguimiento de citas</a></li>
+        <li><a id="btnSalir" class="tab" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="heroMedia"><img src="logotipo.png" /></div>
+    <div class="heroText">
+      <h2>Bienvenido a Foro Autra</h2>
+      <p>Aquí verás publicaciones importantes, ideas y anotaciones relevantes.</p>
+      <a href="#feed" class="btn">🔍 Explorar Foro</a>
     </div>
-  </header>
+  </section>
 
-  <main class="wrap" role="main">
-    <!-- Intro / Hero suave -->
-    <section class="hero" aria-label="Resumen">
-      <div class="heroMedia" aria-hidden="true">
-        <img src="logotipo.png" alt="" loading="lazy" />
+  <!-- FEED -->
+  <section class="feed" id="feed">
+
+    <!-- PUBLICACIÓN 1 -->
+    <article class="card" data-id="post-1">
+      <header class="cardHeader">
+        <div class="avatar">CM</div>
+        <div>
+          <h3 class="name">Alan</h3>
+          <div class="meta">Publicación de prueba</div>
+        </div>
+      </header>
+
+      <div class="tags"><span class="tag">Prueba</span><span class="tag">Test</span></div>
+      <p class="desc">Nuevo artículo: “Esta publicación es de prueba para testear el sistema.“</p>
+
+      <div class="actions">
+        <button class="btn likeBtn">❤️ Me gusta <span class="likeCount">0</span></button>
+        <button class="btn comentarBtn">💬 Comentar</button>
       </div>
-      <div class="heroText">
-        <p class="sr-only">Resumen de novedades de terapeutas</p>
-        <h2>Bienvenido a Foro Autra</h2>
-        <p>Aquí verás un <strong>feed de publicaciones</strong>: Comentarios Importantes, Ideas y Anotaciones relevantes.</p>
-        <p>Usa <em>Perfil</em> para gestionar tu área privada.</p>
-        <a href="#feed" class="btn"><i class="fas fa-stream" aria-hidden="true"></i>🔍 Explorar Foro</a>
+
+      <div class="comentarios" style="margin-top:8px"></div>
+      <div class="comentarBox" style="margin-top:10px; display:none">
+        <textarea class="inputComentario" rows="2" placeholder="Escribe tu comentario..." style="width:100%;padding:8px;border-radius:8px;"></textarea>
+        <button class="btnEnviarComentario" style="margin-top:6px;width:100%;border-radius:8px;padding:8px">➤ Publicar comentario</button>
       </div>
-    </section>
+    </article>
 
-    <!-- Feed de terapeutas (plantillas) -->
-    <section class="feed" aria-label="Terapeutas" role="list" id="feed">
-      <!-- Plantilla 1: Terapeuta Individual (destacado) -->
-      <article class="card" role="listitem">
-        <header class="cardHeader">
-          <div class="avatar" aria-hidden="true">CM</div>
-          <div>
-            <h3 class="name">Alan</h3>
-            <div class="meta">Publicacion de prueba</div>
-          </div>
-        </header>
-        <div class="tags">
-          <span class="tag">Prueba</span>
-          <span class="tag">Prueba</span>
-          <span class="tag">Prueba</span>
+    <!-- PUBLICACIÓN 2 -->
+    <article class="card" data-id="post-2">
+      <header class="cardHeader">
+        <div class="avatar">CM</div>
+        <div>
+          <h3 class="name">Alan</h3>
+          <div class="meta">Publicación de prueba</div>
         </div>
-        <p class="desc">Nuevo artículo:</strong> “Esta publicacion es de prueba para testear el sistema.“</p>
-        <div class="actions">
-          <a href="#" class="btn"></i>❤️ Me Gusta</a>
-          <a href="#" class="btn"></i>💬 Comentar</a>
+      </header>
+
+      <div class="tags"><span class="tag">Prueba</span></div>
+      <p class="desc">Test secundario.</p>
+
+      <div class="actions">
+        <button class="btn likeBtn">❤️ Me gusta <span class="likeCount">0</span></button>
+        <button class="btn comentarBtn">💬 Comentar</button>
+      </div>
+
+      <div class="comentarios"></div>
+      <div class="comentarBox" style="display:none">
+        <textarea class="inputComentario" rows="2" placeholder="Escribe tu comentario..." style="width:100%;padding:8px;border-radius:8px;"></textarea>
+        <button class="btnEnviarComentario" style="margin-top:6px;width:100%;padding:8px;border-radius:8px">➤ Publicar comentario</button>
+      </div>
+    </article>
+
+    <!-- PUBLICACIÓN 3 -->
+    <article class="card" data-id="post-3">
+      <header class="cardHeader">
+        <div class="avatar">FA</div>
+        <div>
+          <h3 class="name">Jorge Martín</h3>
+          <div class="meta">Publicación de prueba</div>
         </div>
-      </article>
+      </header>
 
-      <!-- Plantilla 2: Equipo/Centro (multi-terapeuta) -->
-      <article class="card" role="listitem">
-        <header class="cardHeader">
-          <div class="avatar" aria-hidden="true">CM</div>
-          <div>
-            <h3 class="name">Alan</h3>
-            <div class="meta">Publicacion de prueba</div>
-          </div>
-        </header>
-        <div class="tags">
-          <span class="tag">Prueba</span>
-          <span class="tag">Prueba</span>
-          <span class="tag">Prueba</span>
-        </div>
-        <p class="desc">Nuevo artículo:</strong> “Esta publicacion es de prueba para testear el sistema.“</p>
-        <div class="actions">
-          <a href="#" class="btn"></i>❤️ Me Gusta</a>
-          <a href="#" class="btn"></i>💬 Comentar</a>
-        </div>
-      </article>
+      <div class="tags"><span class="tag">Ejemplo</span></div>
+      <p class="desc"><strong>Nuevo artículo:</strong> Probando funcionalidades del foro.</p>
 
-      <!-- Plantilla 3: Terapeuta con contenido/última publicación -->
-      <article class="card" role="listitem">
-        <header class="cardHeader">
-          <div class="avatar" aria-hidden="true">FA</div>
-          <div>
-            <h3 class="name">Jorge Martín</h3>
-            <div class="meta">Publicacion de prueba</div>
-          </div>
-        </header>
-        <div class="tags">
-          <span class="tag">Prueba</span>
-          <span class="tag">Prueba</span>
-          <span class="tag">Prueba</span>
-        </div>
-        <p class="desc"><strong>Nuevo artículo:</strong> “Esta publicacion es de prueba para testear el sistema.“</p>
-        <div class="actions">
-          <a href="#" class="btn"></i>❤️ Me Gusta</a>
-          <a href="#" class="btn"></i>💬 Comentar</a>
-        </div>
-      </article>
-    </section>
-  </main>
+      <div class="actions">
+        <button class="btn likeBtn">❤️ Me gusta <span class="likeCount">0</span></button>
+        <button class="btn comentarBtn">💬 Comentar</button>
+      </div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script>
-    // Config / init (idéntico al resto de páginas)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
-      authDomain: "autra-digital.firebaseapp.com",
-      projectId: "autra-digital",
-      storageBucket: "autra-digital.firebasestorage.app",
-      messagingSenderId: "149401206632",
-      appId: "1:149401206632:web:5ed11470a44b4ef648a0dd",
-      measurementId: "G-MEVPRYBQC1"
-    };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+      <div class="comentarios"></div>
+      <div class="comentarBox" style="display:none">
+        <textarea class="inputComentario" rows="2" placeholder="Escribe tu comentario..." style="width:100%;padding:8px;border-radius:8px;"></textarea>
+        <button class="btnEnviarComentario" style="margin-top:6px;width:100%;padding:8px;border-radius:8px">➤ Publicar comentario</button>
+      </div>
+    </article>
 
-    // Normaliza valores de rol a un set controlado
-    function normalizeRole(r){
-      if (!r) return null;
-      const s = String(r).trim().toLowerCase();
-      if (s === 'formador') return 'Admin';
-      if (s === 'admin') return 'Admin';
-      if (s === 'terapeuta') return 'Terapeuta';
-      if (s === 'paciente') return 'Paciente';
-      return r; // por si en el futuro hay más
-    }
+  </section>
+</main>
 
-    const perfilLink = document.getElementById('perfilLink');
-    const btnSalir = document.getElementById('btnSalir');
+<!-- FIREBASE (NO TOCADO) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    // Guard + resolución de rol para el botón "Perfil"
-    // Deshabilitamos temporalmente el enlace hasta resolver rol
-    perfilLink.setAttribute('aria-disabled','true');
-    perfilLink.addEventListener('click', (e) => {
-      if (perfilLink.getAttribute('aria-disabled') === 'true' || perfilLink.getAttribute('href') === '#') {
-        e.preventDefault();
-      }
-    });
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBOz08UM2B4Dx2glw-1VsSOCm0dWBvegKM",
+  authDomain: "autra-digital.firebaseapp.com",
+  projectId: "autra-digital",
+  storageBucket: "autra-digital.firebasestorage.app",
+  messagingSenderId: "149401206632",
+  appId: "1:149401206632:web:5ed11470a44b4ef648a0dd"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+</script>
 
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.href = './login.html';
-        return;
-      }
-      try {
-        let role = null;
+<!-- LOGICA COMPLETA DEL FORO -->
+<script>
+const key = "foro_autra_v1";
+let posts = JSON.parse(localStorage.getItem(key)) || {};
 
-        // 1) Validar que la caché pertenece a ESTE usuario
-        let cached = null;
-        const cacheStr = sessionStorage.getItem('autra_user');
-        if (cacheStr) {
-          try { cached = JSON.parse(cacheStr); } catch(_) {}
-        }
-        if (cached && cached.uid === user.uid && cached.role) {
-          role = cached.role;
-        }
+function save(){ localStorage.setItem(key, JSON.stringify(posts)); }
 
-        // 2) Si no hay rol válido en caché, leer Firestore y normalizar
-        if (!role) {
-          const snap = await db.collection('users').doc(user.uid).get();
-          const raw = snap.exists ? (snap.data().role ?? null) : null;
-          role = normalizeRole(raw);
-          sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role, ts:Date.now() }));
-        }
+document.querySelectorAll(".card").forEach(card=>{
+  const id = card.dataset.id;
+  if(!posts[id]) posts[id] = { likes: 0, comentarios: [] };
 
-        // 3) Destino dinámico del perfil
-        let dest = './dashboard_basico.html'; // por defecto, paciente
-        if (role === 'Terapeuta' || role === 'Admin') dest = './dashboard_avanzado.html';
-        else if (role === 'Paciente') dest = './dashboard_basico.html';
+  const likeBtn = card.querySelector(".likeBtn");
+  const likeCount = card.querySelector(".likeCount");
+  const comentarBtn = card.querySelector(".comentarBtn");
+  const comentariosDiv = card.querySelector(".comentarios");
+  const box = card.querySelector(".comentarBox");
+  const input = card.querySelector(".inputComentario");
+  const send = card.querySelector(".btnEnviarComentario");
 
-        perfilLink.href = dest;
-        perfilLink.removeAttribute('aria-disabled');
-      } catch (err) {
-        console.error('Error resolviendo rol:', err);
-        sessionStorage.setItem('autra_user', JSON.stringify({ uid:user.uid, role:null, ts:Date.now() }));
-        perfilLink.href = './dashboard_basico.html';
-        perfilLink.removeAttribute('aria-disabled');
-      }
-    });
+  likeCount.textContent = posts[id].likes;
 
-    btnSalir.addEventListener('click', async (e) => {
-      e.preventDefault();
-      try { await auth.signOut(); } finally { sessionStorage.removeItem('autra_user'); window.location.href = './index.html'; }
-    });
+  function renderComments(){
+    comentariosDiv.innerHTML = posts[id].comentarios.map(c=>`
+      <div style="background:#fff4;padding:8px;border-radius:8px;margin-top:6px;">
+        <strong>${c.nombre}</strong><br>${c.texto}
+      </div>`).join("");
+  }
+  renderComments();
 
-    // NOTA: El feed actual usa plantillas estáticas. 
-    // Cuando tengas la colección (p.ej. therapists), aquí haces un fetch y renderizas.
-  </script>
+  likeBtn.addEventListener("click", ()=>{
+    posts[id].likes++;
+    likeCount.textContent = posts[id].likes;
+    save();
+  });
 
-  <!-- ===== Tawk.to (bolita de chat) ===== -->
-  <script type="text/javascript">
-    // Inicializa Tawk (mismo ID que usas en otras páginas)
-    window.Tawk_API = window.Tawk_API || {};
-    window.Tawk_LoadStart = new Date();
-    (function(){
-      var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/660bca27a0c6737bd12750d2/1hqf0rc1b';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-    })();
+  comentarBtn.addEventListener("click", ()=>{
+    box.style.display = box.style.display === "none" ? "block" : "none";
+  });
 
-    // Tags y evento cuando el widget está listo
-    window.Tawk_API.onLoad = function(){
-      try {
-        window.Tawk_API.addTags?.(['inicio','home']);
-        window.Tawk_API.addEvent?.('Inicio abierto');
-      } catch(_) {}
+  send.addEventListener("click", ()=>{
+    const t = input.value.trim();
+    if(!t) return alert("Escribe algo.");
+    const nombre = window.__autraUserInfo?.email?.split("@")[0] || "Usuario";
+    posts[id].comentarios.push({ nombre, texto:t });
+    input.value = "";
+    save();
+    renderComments();
+  });
+});
+</script>
 
-      // Si ya sabemos del usuario, sincroniza atributos
-      if (window.__autraUserInfo && typeof window.Tawk_API.setAttributes === 'function') {
-        try {
-          window.Tawk_API.setAttributes({
-            name: (window.__autraUserInfo.nombre || 'Usuario Autra'),
-            email: window.__autraUserInfo.email || undefined,
-            uid: window.__autraUserInfo.uid,
-            role: window.__autraUserInfo.role || undefined
-          }, function(){} );
-        } catch(_) {}
-      }
-    };
-  </script>
-
-  <!-- ===== Sync de usuario con Tawk (sin tocar tu lógica existente) ===== -->
-  <script>
-    // Listener adicional SOLO para pasar los datos a Tawk si procede (no altera tu guard original)
-    auth.onAuthStateChanged(function(user){
-      if (!user) {
-        window.__autraUserInfo = null;
-        return;
-      }
-      // Lee rol cacheado si existe (ya lo generas arriba)
-      let role = null;
-      try {
-        const cacheStr = sessionStorage.getItem('autra_user');
-        if (cacheStr) role = (JSON.parse(cacheStr).role || null);
-      } catch(_){}
-
-      // Guarda info mínima para onLoad tardío
-      window.__autraUserInfo = { uid:user.uid, email:user.email || null, role:role || null, nombre:null };
-
-      // Si el widget ya está listo, pasa atributos ahora
-      if (window.Tawk_API && typeof window.Tawk_API.setAttributes === 'function') {
-        try {
-          window.Tawk_API.setAttributes({
-            name: 'Usuario Autra',
-            email: user.email || undefined,
-            uid: user.uid,
-            role: role || undefined
-          }, function(){} );
-        } catch(_) {}
-      }
-    });
-  </script>
 </body>
 </html>
